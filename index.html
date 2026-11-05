@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nội Quy & Quy Trình Citiship</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    (function() {
+      try {
+        const theme = localStorage.getItem('citiship_theme');
+        if (theme === 'dark' || (!theme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark-mode');
+          document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('dark-mode');
+          });
+        }
+      } catch(e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <a href="#/" class="brand">
+      <img src="images/citiship-logo.png" alt="Citiship Logo" class="brand-logo">
+      <span>Nội Quy & Quy Trình Citiship</span>
+    </a>
+    <div id="user-info" class="user-pill"></div>
+  </header>
+  <main id="app"></main>
+  <div id="login-modal" class="modal-overlay" style="display: none;"></div>
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
