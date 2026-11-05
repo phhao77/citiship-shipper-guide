@@ -135,3 +135,5 @@ Chỉ còn 2 mục chưa có nội dung thật: `lenh-telegram`, `ho-tro`.
   + Xin đơn Box chung sau 20s: Sau 20s trên box chung nếu vẫn còn đơn thì TĐV sẽ hỗ trợ bắn trực tiếp cho shipper nào nhắn xin.
   + Đơn mua hàng (gọi xác nhận món & địa chỉ): Nhấn mạnh bắt buộc gọi khách xác nhận chi tiết món ăn (số lượng, ghi chú) và địa chỉ giao hàng trước khi mua hàng; không gọi trước sẽ bị từ chối hỗ trợ bồi hoàn 100% nếu có sự cố.
   + Đưa toàn bộ source code lên GitHub `phhao77/citiship-shipper-guide` và kích hoạt tự động deploy qua GitHub Pages (`https://phhao77.github.io/citiship-shipper-guide/`). Có thể kết nối thêm Cloudflare Pages để tự động deploy song song.
+  + Thêm Favicon logo Citiship vào thẻ `<head>` của `index.html` (thay thế biểu tượng quả địa cầu mặc định trên tab trình duyệt).
+  + Thay thế toàn bộ cụm từ "sống còn" thành "quan trọng / hàng đầu" trên toàn bộ nội dung web cho nhẹ nhàng, chuyên nghiệp.

@@ -291,7 +291,7 @@ const PAGES = [
         </div>` },
 
       { title: 'Gọi khách xác nhận trước', html: `
-        <div class="quick-summary">📞 Quy tắc sống còn: BẮT BUỘC gọi khách trước khi mua hoặc trước khi rời shop!</div>
+        <div class="quick-summary">📞 Quy tắc quan trọng: BẮT BUỘC gọi khách trước khi mua hoặc trước khi rời shop!</div>
         <div class="rule-grid">
           <div class="rule-card do">
             <h4>✔️ Thao tác chuẩn</h4>
@@ -480,7 +480,7 @@ const PAGES = [
         </div>` },
 
       { title: 'Không kê tiền (Hàng & Cước ship)', html: `
-        <div class="quick-summary">💰 Trung thực là nguyên tắc sống còn — Gian lận tiền bạc vi phạm 1 lần là khóa tài khoản vĩnh viễn!</div>
+        <div class="quick-summary">💰 Trung thực là nguyên tắc hàng đầu — Gian lận tiền bạc vi phạm 1 lần là khóa tài khoản vĩnh viễn!</div>
         <div class="rule-grid">
           <div class="rule-card do">
             <h4>✔️ Thu đúng giá quy định</h4>
@@ -551,7 +551,7 @@ const PAGES = [
       { title: 'Tổng quan Quy trình xử lý đơn', html: `
         <div class="quick-summary">📋 Nắm vững quy trình chuẩn để đi đơn an toàn, nhanh chóng và không bị boom hàng.</div>
         <div class="rule-card do" style="margin-bottom: 14px;">
-          <h4>💡 3 Lưu ý sống còn của Shipper Citiship:</h4>
+          <h4>💡 3 Lưu ý quan trọng của Shipper Citiship:</h4>
           <ul>
             <li><b>1.</b> Luôn kiểm tra kỹ thông tin đơn và gọi xác nhận trước khi rời shop / mua hàng.</li>
             <li><b>2.</b> Có trục trặc (không gọi được, sai địa chỉ): <b>Tag ngay @citiship_cantho</b>.</li>
@@ -660,7 +660,7 @@ const PAGES = [
           </ol>
         </div>
         <div class="rule-card warn" style="margin-bottom: 16px;">
-          <h4>⚠️ LƯU Ý SỐNG CÒN VỚI ĐƠN MUA HÀNG:</h4>
+          <h4>⚠️ LƯU Ý QUAN TRỌNG VỚI ĐƠN MUA HÀNG:</h4>
           <p>Bắt buộc phải gọi điện thoại xác nhận đủ cả 2 mục: <b>MÓN ĂN & ĐỊA CHỈ GIAO</b> trước khi bỏ tiền mua hàng. Tuyệt đối không tự ý mua đồ khi chưa liên hệ được khách. Nếu không gọi trước mà phát sinh sai sót, đổi món hoặc bị boom hàng thì <b>công ty từ chối hỗ trợ bồi hoàn 100%</b>!</p>
         </div>
         <h3>Sự cố thường gặp & Cách xử lý:</h3>
@@ -1068,7 +1068,7 @@ const PAGES = [
           </div>
         </div>
         <div class="rule-card dont">
-          <h4>❌ LƯU Ý SỐNG CÒN:</h4>
+          <h4>❌ LƯU Ý QUAN TRỌNG:</h4>
           <p>Nếu shipper <b>KHÔNG gọi xác nhận trước</b> với người nhận theo quy trình, công ty sẽ <span class="rule-tag red">từ chối hỗ trợ bồi hoàn 100%</span>!</p>
         </div>` },
 
