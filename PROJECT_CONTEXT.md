@@ -154,3 +154,8 @@ Chỉ còn 2 mục chưa có nội dung thật: `lenh-telegram`, `ho-tro`.
   + **Phòng thi Sát hạch (Exam Mode - `#/exam`):** Mở khóa khi đọc đủ 8/8 mục; khóa topbar navigation trong lúc làm bài; kiểm tra đầy đủ 22 câu trước khi nộp; tiêu chuẩn ĐẠT ≥ 19/22 câu (≥ 85%).
   + **Trang Kết quả thi (`#/exam-result`):** Chấm điểm tự động, báo Đậu/Rớt, đối chiếu đáp án chi tiết từng câu kèm lời giải thích; cho phép thi lại; tự động sync điểm số và trạng thái lên Supabase.
   + **Nâng cấp Dashboard Quản trị (`#/admin`):** Thêm 2 thẻ KPI (Shipper Mới, Đã Đậu Sát Hạch), thêm 2 cột Vai trò & Điểm Sát hạch trong bảng dữ liệu, bổ sung bộ lọc nâng cao và đồng bộ xuất file Excel/CSV đầy đủ.
+  + **Tinh chỉnh giao diện & nhận diện thương hiệu:**
+    - Cập nhật logo chính thức dạng PNG trong suốt không nền (`images/citiship-logo.png`).
+    - Đổi thông điệp thẻ: *"Lộ trình training shipper mới — Bạn cần training 8/8 mục để làm bài test 22 câu"*.
+    - Bổ sung quyền hạn Ban Lãnh đạo vào chân trang: *"có thể được điều chỉnh, cập nhật linh hoạt theo quyết định của Ban Lãnh đạo Công ty để phù hợp với tình hình vận hành thực tế"*.
+    - Chống co cụm chữ thanh tiến độ `.up-text` trên màn hình hẹp (flex wrap & gap).

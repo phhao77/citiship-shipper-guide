@@ -736,8 +736,8 @@ function renderHome() {
           <div class="new-shipper-card locked">
             <div class="nsc-icon">🔒</div>
             <div class="nsc-content">
-              <h4>Lộ trình Sát hạch Shipper Mới:</h4>
-              <p>Bạn cần đọc và bấm xác nhận đủ <b>8/8 mục</b> bên dưới để mở khóa <b>Bài Kiểm Tra Sát Hạch Kiến Thức (22 câu)</b>.</p>
+              <h4>Lộ trình training shipper mới</h4>
+              <p>Bạn cần training <b>8/8 mục</b> để làm bài test 22 câu.</p>
               <div class="nsc-badge">Đã hoàn thành: <b>${confirmedCount} / 8 mục</b></div>
             </div>
           </div>
@@ -762,10 +762,10 @@ function renderHome() {
           <div class="new-shipper-card unlocked-pulse">
             <div class="nsc-icon">🎉</div>
             <div class="nsc-content">
-              <h4>Đã đọc trọn vẹn 8/8 mục! Bước tiếp theo:</h4>
-              <p>Vui lòng hoàn thành <b>Bài Kiểm Tra Sát Hạch Kiến Thức (22 câu tình huống)</b> để kiểm tra mức độ hiểu quy trình.</p>
+              <h4>Đã hoàn thành training 8/8 mục!</h4>
+              <p>Vui lòng hoàn thành <b>Bài test sát hạch kiến thức (22 câu)</b> để kiểm tra mức độ hiểu quy trình.</p>
               ${hasTaken ? `<p class="exam-prev-score">Điểm lần trước: <span class="score-fail">${user.exam_score} / 22 câu (Chưa đạt)</span>. Yêu cầu: Đúng ≥ 19/22 câu.</p>` : ''}
-              <a href="#/exam" class="btn-start-exam">✍️ VÀO PHÒNG THI SÁT HẠCH NGAY (22 CÂU) →</a>
+              <a href="#/exam" class="btn-start-exam">✍️ BẮT ĐẦU LÀM BÀI TEST NGAY (22 CÂU) →</a>
             </div>
           </div>
         `;
@@ -774,7 +774,7 @@ function renderHome() {
       progressBanner = `
         <div class="user-progress-box">
           <div class="up-text">
-            <span>Tiến độ đọc của <b>${user.name}</b> (Shipper Mới):</span>
+            <span>Tiến độ training của <b>${user.name}</b> (Shipper Mới):</span>
             <b>${confirmedCount} / 8 mục đã xác nhận</b>
           </div>
           <div class="progress"><div class="bar" style="width:${(confirmedCount / 8) * 100}%"></div></div>
@@ -817,7 +817,7 @@ function renderHome() {
     </div>
     <footer class="site-footer">
       <div class="footer-notice">
-        ⚖️ <b>Lưu ý nội bộ:</b> Tài liệu lưu hành nội bộ của Công ty Citiship. Mọi chính sách chiết khấu, quy trình đi đơn và chế tài xử lý vi phạm do Ban Điều hành Citiship phê duyệt và có hiệu lực thi hành đối với tất cả Đối tác tài xế.
+        ⚖️ <b>Lưu ý nội bộ:</b> Tài liệu lưu hành nội bộ của Công ty Citiship. Mọi chính sách chiết khấu, quy trình đi đơn và chế tài xử lý vi phạm do Ban Điều hành Citiship phê duyệt, có hiệu lực thi hành đối với tất cả Đối tác tài xế và có thể được điều chỉnh, cập nhật linh hoạt theo quyết định của Ban Lãnh đạo Công ty để phù hợp với tình hình vận hành thực tế.
       </div>
       <p>© 2026 Citiship Cần Thơ · Đồng hành cùng Đối tác tài xế</p>
       <div class="footer-links">
@@ -849,14 +849,14 @@ function renderExam() {
     app.innerHTML = `
       <div class="exam-blocked-box">
         <div class="eb-icon">⛔</div>
-        <h2>Chưa thể vào phòng thi</h2>
-        <p>Bạn cần đọc và bấm xác nhận đủ <b>8/8 mục nội quy</b> trước khi tham gia bài sát hạch kiến thức.</p>
+        <h2>Chưa thể vào làm bài test</h2>
+        <p>Bạn cần hoàn thành training và bấm xác nhận đủ <b>8/8 mục nội quy</b> trước khi làm bài test 22 câu.</p>
         <div class="eb-progress">
-          <span>Tiến độ hiện tại của bạn:</span>
-          <b>${confirmedCount} / 8 mục đã đọc</b>
+          <span>Tiến độ training hiện tại:</span>
+          <b>${confirmedCount} / 8 mục đã hoàn thành</b>
         </div>
         <div class="eb-actions">
-          <a href="#/" class="btn-admin-primary">← Quay lại đọc tiếp tài liệu</a>
+          <a href="#/" class="btn-admin-primary">← Quay lại training tiếp</a>
         </div>
       </div>
     `;
