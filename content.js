@@ -51,22 +51,38 @@ const PAGES = [
       { title: 'Bảng % chiết khấu theo giờ chạy', html: `
         <div class="quick-summary">📈 Chạy càng nhiều giờ — % nộp về công ty càng thấp (thu nhập càng cao).</div>
         <p>Áp dụng từ 04/01/2021. Chạy đủ mốc giờ nào thì áp dụng thang % nộp tương ứng cho tuần đó:</p>
+        <div class="note">
+          ⚠️ <b>LƯU Ý QUAN TRỌNG VỀ GIỜ CHẠY:</b><br>
+          Mốc giờ xét duyệt là <b>Giờ chạy thực tế</b> (được tính sau khi đã trừ/xóa các ca vi phạm quy định như: vào trễ quá 5p, ra khỏi nội ô 15p, không thả định vị hoặc ca không có đơn).
+        </div>
         <table>
           <tr><th>Mốc giờ chạy / tuần</th><th>% Nộp về công ty</th><th>Thu nhập giữ lại</th></tr>
           <tr><td>30 giờ (Mức tối thiểu)</td><td>24%</td><td>76%</td></tr>
           <tr><td>35 giờ</td><td>23%</td><td>77%</td></tr>
           <tr><td>40 giờ</td><td>22%</td><td>78%</td></tr>
-          <tr style="background: #fff7ed;"><td><b>50 giờ (Mốc phổ biến)</b></td><td><b style="color:#ea580c;">21%</b></td><td><b>79%</b></td></tr>
+          <tr class="row-orange"><td><b>50 giờ (Mốc phổ biến)</b></td><td><b>21%</b></td><td><b>79%</b></td></tr>
           <tr><td>60 giờ</td><td>20%</td><td>80%</td></tr>
           <tr><td>70 giờ</td><td>19%</td><td>81%</td></tr>
-          <tr style="background: #eff6ff;"><td><b>75 giờ (Mốc chuyên cần)</b></td><td><b style="color:#2563eb;">18%</b></td><td><b>82%</b></td></tr>
+          <tr class="row-blue"><td><b>75 giờ (Mốc chuyên cần)</b></td><td><b>18%</b></td><td><b>82%</b></td></tr>
           <tr><td>80 giờ</td><td>17%</td><td>83%</td></tr>
           <tr><td>85 giờ</td><td>16%</td><td>84%</td></tr>
           <tr><td>90 giờ</td><td>15%</td><td>85%</td></tr>
           <tr><td>95 giờ</td><td>14%</td><td>86%</td></tr>
-          <tr style="background: #ecfdf5;"><td><b>100 giờ (Mốc xuất sắc)</b></td><td><b style="color:#10b981;">13%</b></td><td><b>87%</b></td></tr>
+          <tr class="row-green"><td><b>100 giờ (Mốc xuất sắc)</b></td><td><b>13%</b></td><td><b>87%</b></td></tr>
           <tr><td>105 giờ trở lên</td><td><b>12%</b></td><td><b>88%</b></td></tr>
-        </table>` },
+        </table>
+
+        <h3>💵 Ví dụ minh họa thực tế tính tiền nộp Thứ 2:</h3>
+        <p>Giả sử trong tuần tổng tiền ship bạn kiếm được là <b>1.000.000đ</b>:</p>
+        <table>
+          <tr><th>Mốc giờ chạy thực tế</th><th>% Nộp</th><th>Số tiền nộp về cty</th><th>Thực nhận của Shipper</th></tr>
+          <tr><td>Tuần đầu (Thử việc)</td><td>25%</td><td><b>250.000đ</b></td><td><span class="rule-tag green">750.000đ</span></td></tr>
+          <tr><td>Chạy 30h (Tối thiểu)</td><td>24%</td><td><b>240.000đ</b></td><td><span class="rule-tag green">760.000đ</span></td></tr>
+          <tr class="row-orange"><td><b>Chạy 50h (Phổ biến)</b></td><td>21%</td><td><b>210.000đ</b></td><td><span class="rule-tag green"><b>790.000đ</b></span></td></tr>
+          <tr class="row-blue"><td><b>Chạy 75h (Chuyên cần)</b></td><td>18%</td><td><b>180.000đ</b></td><td><span class="rule-tag green"><b>820.000đ</b></span></td></tr>
+          <tr class="row-green"><td><b>Chạy 100h (Xuất sắc)</b></td><td>13%</td><td><b>130.000đ</b></td><td><span class="rule-tag green"><b>870.000đ</b></span></td></tr>
+        </table>
+        <small style="color:var(--muted)">* Chưa bao gồm các khoản thưởng cao điểm, thưởng box chung hoặc trừ phạt nếu có.</small>` },
 
       { title: 'Thưởng giờ cao điểm', html: `
         <div class="quick-summary">🎁 Chạy vào khung giờ cao điểm đông đơn được giảm thêm % chiết khấu (được cộng gộp).</div>
@@ -157,6 +173,53 @@ const PAGES = [
     ] },
   { id: 'quy-dinh', icon: '🛡️', tone: 'b', title: 'Quy định', summary: 'Nội quy & Chế tài làm việc',
     steps: [
+      { title: '3 Tầng Trí Nhớ & 15 Quy Tắc Đỏ', html: `
+        <div class="quick-summary">🎯 Không bắt học thuộc lòng mọi chi tiết — Tập trung nhớ kỹ các hành vi gây mất tiền, mất hàng, tai nạn hay gian lận!</div>
+        
+        <h3>Bảng phân loại 3 tầng ghi nhớ:</h3>
+        <table>
+          <tr><th>Tầng ghi nhớ</th><th>Mục tiêu</th><th>Nội dung trọng tâm</th><th>Chuẩn đạt</th></tr>
+          <tr class="row-orange">
+            <td><b>🔴 ĐỎ - Cốt lõi</b></td>
+            <td>Phải nhớ và thực hiện đúng</td>
+            <td>Gọi trước khi mua/rời shop, không tự đổi phí, không tin bill ảnh, xử lý boom, ảnh bằng chứng, không dùng hộ tài khoản</td>
+            <td><b>100%</b></td>
+          </tr>
+          <tr>
+            <td><b>🟡 VÀNG - Vận hành</b></td>
+            <td>Làm đúng quy trình thường ngày</td>
+            <td>Vào ca, đổi ca, box chung, công nợ, lệnh hệ thống, hoàn tất đơn</td>
+            <td>≥ 85%</td>
+          </tr>
+          <tr class="row-blue">
+            <td><b>🔵 XANH - Tra cứu</b></td>
+            <td>Tìm được khi cần</td>
+            <td>Bảng chiết khấu, thưởng, kênh liên hệ, hướng dẫn giao diện app</td>
+            <td>Tra cứu khi cần</td>
+          </tr>
+        </table>
+
+        <h3>🚨 Danh sách 15 Quy tắc Đỏ cốt lõi (Bắt buộc thực hiện 100%):</h3>
+        <div class="rule-card dont" style="margin-bottom: 14px;">
+          <ol style="margin: 0; padding-left: 20px; line-height: 1.85;">
+            <li><b>Không mua hàng</b> trước khi gọi xác nhận món & địa chỉ.</li>
+            <li><b>Không rời shop</b> trước khi gọi người nhận.</li>
+            <li><b>Không ứng tiền</b> khi có bất kỳ dấu hiệu bất thường nào.</li>
+            <li><b>Không tin ảnh bill chuyển khoản</b>; phải kiểm tra biến động số dư thực nhận.</li>
+            <li><b>Không tự ý thay đổi</b> phí ship hoặc đòi thêm phụ phí ngoài app.</li>
+            <li><b>Đổi địa chỉ / ship báo sau</b> bắt buộc phải được Tổng đài phê duyệt.</li>
+            <li><b>Chụp đủ</b> hình hàng hóa, hóa đơn và log cuộc gọi bằng Timestamp.</li>
+            <li><b>Boom hàng</b> phải lập tức dừng xử lý và tag ngay Tổng đài.</li>
+            <li><b>Không nhận đơn riêng</b> ngoài hệ thống công ty.</li>
+            <li><b>Không tạo đơn ảo</b> hoặc ngâm đơn, treo đơn ăn giờ.</li>
+            <li><b>Không cho người khác</b> mượn dùng tài khoản chạy chui.</li>
+            <li><b>Giao xong</b> phải bấm hoàn tất đơn và báo lại vị trí ngay.</li>
+            <li><b>Không kê giá món ăn</b> hoặc giữ tiền thừa không thối khách.</li>
+            <li><b>Không tự ý bỏ ca</b>; bận việc phải báo xin off theo quy trình.</li>
+            <li><b>Tai nạn / thời tiết nguy hiểm:</b> Luôn ưu tiên an toàn bản thân, không cố giao hàng.</li>
+          </ol>
+        </div>` },
+
       { title: 'Chụp ảnh vào ca', html: `
         <div class="quick-summary">📸 Chụp selfie bằng Timestamp Camera để điểm danh vào ca làm.</div>
         <div class="rule-grid">
@@ -749,7 +812,19 @@ const PAGES = [
   { id: 'huong-dan-app', icon: '📱', tone: 'b', title: 'Hướng dẫn thao tác', summary: 'Cách dùng app',
     steps: [
       { title: '1. Thao tác Vào ca', html: `
-        <p>Đến ca làm việc đã đăng ký, tại màn hình chính (tab Home), bấm nút <b>Bắt đầu ca</b> để mở giao diện vào ca.</p>
+        <div class="quick-summary">⏰ Đến ca làm việc đã đăng ký, chuẩn bị đầy đủ thiết bị và bấm Bắt đầu ca trên tab Home.</div>
+        
+        <h3>✅ Checklist kiểm tra trước khi bấm Vào ca:</h3>
+        <div class="rule-card do" style="margin-bottom: 14px;">
+          <ul>
+            <li>🔋 <b>Pin điện thoại:</b> Đảm bảo trên 80% (khuyến khích luôn mang theo <b>sạc dự phòng</b>).</li>
+            <li>📶 <b>Mạng 4G/5G & Định vị GPS:</b> Bật sẵn dữ liệu di động tốc độ cao và bật vị trí chính xác cao.</li>
+            <li>🎒 <b>Dụng cụ đi ca:</b> Đủ 4 món (nón bảo hiểm phụ, 3 dây ràng, áo mưa, túi giữ nhiệt/chống nước).</li>
+            <li>💵 <b>Tiền mặt ứng hàng:</b> Chuẩn bị sẵn tiền lẻ để thối và đủ tiền mặt theo hạn mức đăng ký.</li>
+            <li>👕 <b>Tác phong:</b> Mặc đồng phục Citiship và mặc quần dài lịch sự.</li>
+          </ul>
+        </div>
+
         <figure>
           <img src="images/app-bat-dau-ca.png" alt="Bấm Bắt đầu ca trên tab Home">
           <figcaption>1. Nhấn nút "Bắt đầu ca" màu xanh trên màn hình chính.</figcaption>
@@ -763,7 +838,12 @@ const PAGES = [
           <li><b>Ảnh vào ca:</b> Dùng app Timestamp Camera chụp selfie rõ mặt, chọn ảnh vừa chụp tải lên hệ thống.</li>
           <li><b>Tiền ứng hàng:</b> Nhập chính xác số tiền mặt hiện có vào ô <i>"Tiền ship hiện có"</i> để hệ thống định mức ứng tiền khi nhận đơn.</li>
           <li><b>Xác nhận Vào ca:</b> Sau khi hoàn thành đủ 3 mục (Ảnh selfie, Tiền ship và Vị trí hiện tại), nút <b>Vào ca</b> ở cuối màn hình sẽ sáng lên để bấm xác nhận hoàn tất.</li>
-        </ol>` },
+        </ol>
+        
+        <div class="note">
+          📡 <b>Hỗ trợ khi gặp sự cố Mất mạng / Lỗi GPS:</b><br>
+          Nếu đang trong ca mà điện thoại bị mất sóng mạng tạm thời hoặc GPS bị gián đoạn, app sẽ cho phép lưu offline và ghi nhận log hệ thống. <b>Công ty không tự động phạt</b> nếu shipper có bằng chứng xác minh sự cố khách quan!
+        </div>` },
 
       { title: '2. Báo vị trí (Định vị)', html: `
         <div class="note">
@@ -1073,7 +1153,51 @@ const PAGES = [
         </div>` },
 
       { title: 'Quy chế thắc mắc & Khiếu nại', html: `
-        <div class="quick-summary">⚖️ Quy định rõ ràng: Thắc mắc phải hỏi ngay lúc phỏng vấn / nhận việc!</div>
+        <div class="quick-summary">⚖️ Nguyên tắc công bằng: Sửa hành vi & bảo vệ vận hành — Không gộp mọi lỗi thành gian lận, không phạt chồng chéo!</div>
+        
+        <h3>📊 Ma trận xử lý vi phạm công bằng:</h3>
+        <table>
+          <tr><th>Nhóm lỗi</th><th>Hành vi vi phạm ví dụ</th><th>Hướng xử lý đề xuất</th><th>Bằng chứng bắt buộc</th></tr>
+          <tr>
+            <td><b>Chưa thành thạo</b></td>
+            <td>Quên 1 ảnh, nhập sai lệnh lần đầu</td>
+            <td>Nhắc nhở + hướng dẫn học lại đúng bài</td>
+            <td>Log hệ thống</td>
+          </tr>
+          <tr>
+            <td><b>Lặp lại quy trình</b></td>
+            <td>Thiếu ảnh nhiều lần, ngâm đơn / treo đơn</td>
+            <td>Cảnh báo + tạm hạn chế nhận đơn + tái kiểm tra</td>
+            <td>Tần suất & lịch sử vi phạm</td>
+          </tr>
+          <tr class="row-orange">
+            <td><b>Gian lận có chủ ý</b></td>
+            <td>Kê giá, tạo đơn ảo, dùng hộ tài khoản</td>
+            <td>Tạm khóa, điều tra, có thể ngưng hợp tác</td>
+            <td>Ảnh, log, đối soát, biên bản giải trình</td>
+          </tr>
+          <tr class="row-blue">
+            <td><b>Sự cố hệ thống</b></td>
+            <td>App lỗi, GPS định vị sai, mất sóng mạng</td>
+            <td><span class="rule-tag green">Không phạt khi có bằng chứng</span></td>
+            <td>Mã lỗi hệ thống / ảnh chụp màn hình</td>
+          </tr>
+          <tr class="row-green">
+            <td><b>Bất khả kháng</b></td>
+            <td>Tai nạn giao thông, thời tiết nguy hiểm</td>
+            <td>Ưu tiên an toàn bản thân, hỗ trợ xử lý riêng</td>
+            <td>Biên bản / xác minh thực tế</td>
+          </tr>
+        </table>
+
+        <div class="rule-card warn" style="margin: 16px 0;">
+          <h4>🛡️ QUY TRÌNH RA QUYẾT ĐỊNH XỬ LÝ MINH BẠCH:</h4>
+          <ul>
+            <li>Mỗi quyết định xử phạt bắt buộc phải có: <b>Mã lỗi, bằng chứng cụ thể, người duyệt, mức xử lý, thời hạn và quyền giải trình của shipper</b>.</li>
+            <li><b>Bảo vệ đối tác:</b> Khiếu nại một phía của khách hàng hoặc quán <b>không được coi là căn cứ duy nhất</b> để chấm dứt hợp tác (phải đối chiếu log cuộc gọi, hình ảnh bằng chứng của shipper).</li>
+          </ul>
+        </div>
+
         <div class="rule-grid">
           <div class="rule-card do">
             <h4>✔️ Chủ động trao đổi sớm</h4>

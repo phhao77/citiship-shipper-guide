@@ -137,3 +137,12 @@ Chỉ còn 2 mục chưa có nội dung thật: `lenh-telegram`, `ho-tro`.
   + Đưa toàn bộ source code lên GitHub `phhao77/citiship-shipper-guide` và kích hoạt tự động deploy qua GitHub Pages (`https://phhao77.github.io/citiship-shipper-guide/`). Có thể kết nối thêm Cloudflare Pages để tự động deploy song song.
   + Thêm Favicon logo Citiship vào thẻ `<head>` của `index.html` (thay thế biểu tượng quả địa cầu mặc định trên tab trình duyệt).
   + Thay thế toàn bộ cụm từ "sống còn" thành "quan trọng / hàng đầu" trên toàn bộ nội dung web cho nhẹ nhàng, chuyên nghiệp.
+- 2026-11-06: Tinh chỉnh giao diện mobile, Dark Mode & cập nhật các quy chế nội bộ mới:
+  + Sửa triệt để lỗi vỡ Header trên điện thoại: Tối ưu tên thương hiệu gọn gàng (`CitiShip` trên mobile), co giãn icon/label Quản trị và User pill linh hoạt 1 dòng không bao giờ bị rớt chữ.
+  + Gỡ bỏ widget thời tiết để trang chủ tinh gọn, tải nhanh, tập trung hoàn toàn vào 8 mục chính.
+  + Khắc phục hoàn toàn lỗi màu nền trắng/chữ chìm của Bảng chiết khấu trong Dark Mode (đồng bộ chuẩn Slate Dark dịu mắt).
+  + Bổ sung ví dụ thực tế tính tiền nộp Thứ 2 (với mốc doanh thu 1.000.000đ) và làm rõ định nghĩa "Giờ chạy thực tế" sau khi trừ các ca vi phạm.
+  + Thêm "3 Tầng Trí Nhớ & 15 Quy Tắc Đỏ" vào mở đầu mục Quy định.
+  + Thêm Checklist trước khi vào ca và cơ chế xử lý khi mất mạng/lỗi GPS vào mục Hướng dẫn app.
+  + Thêm "Ma trận xử lý vi phạm công bằng & Quy trình ra quyết định minh bạch" vào mục Khiếu nại.
+  + Thêm lưu ý nội bộ chính thức ở chân trang: *"Tài liệu lưu hành nội bộ của Công ty Citiship. Mọi chính sách chiết khấu, quy trình đi đơn và chế tài xử lý vi phạm do Ban Điều hành Citiship phê duyệt và có hiệu lực thi hành đối với tất cả Đối tác tài xế."*

@@ -78,7 +78,7 @@ initTheme();
 function renderUserPill() {
   const user = getUser();
   const themeBtn = `<button class="btn-theme-toggle" id="theme-toggle" title="Đổi chế độ Sáng / Tối" onclick="toggleTheme()">${isDarkMode() ? '☀️' : '🌙'}</button>`;
-  const adminBtn = `<a href="#admin" class="btn-topbar-admin" title="Vào trang quản trị">📊 Quản trị</a>`;
+  const adminBtn = `<a href="#admin" class="btn-topbar-admin" title="Vào trang quản trị"><span class="admin-ico">📊</span><span class="admin-label">Quản trị</span></a>`;
 
   if (!user) {
     userInfoEl.innerHTML = `
@@ -617,182 +617,6 @@ function getShipperBikeSvg() {
 }
 
 // Helper tạo SVG thời tiết vector sắc nét, chuẩn không vỡ hạt
-function getWeatherIconSvg(code) {
-  if (code === 0) {
-    // Trời nắng ráo
-    return `<svg class="weatherSvg" width="68" height="68" viewBox="0 0 64 64" fill="none">
-      <defs>
-        <linearGradient id="sunFullGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FFE082" />
-          <stop offset="50%" stop-color="#FFB300" />
-          <stop offset="100%" stop-color="#F57C00" />
-        </linearGradient>
-      </defs>
-      <circle cx="32" cy="32" r="14" fill="url(#sunFullGrad)" filter="drop-shadow(0 0 8px rgba(255,179,0,0.6))"/>
-      <g stroke="#FFA000" stroke-width="2.8" stroke-linecap="round">
-        <line x1="32" y1="7" x2="32" y2="12" />
-        <line x1="32" y1="52" x2="32" y2="57" />
-        <line x1="7" y1="32" x2="12" y2="32" />
-        <line x1="52" y1="32" x2="57" y2="32" />
-        <line x1="14.3" y1="14.3" x2="17.8" y2="17.8" />
-        <line x1="46.2" y1="46.2" x2="49.7" y2="49.7" />
-        <line x1="14.3" y1="49.7" x2="17.8" y2="46.2" />
-        <line x1="46.2" y1="17.8" x2="49.7" y2="14.3" />
-      </g>
-    </svg>`;
-  } else if (code >= 51 && code <= 67) {
-    // Có mưa nhỏ / mưa vừa
-    return `<svg class="weatherSvg" width="68" height="68" viewBox="0 0 64 64" fill="none">
-      <defs>
-        <linearGradient id="rainCloud" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#CBD5E1" />
-          <stop offset="100%" stop-color="#64748B" />
-        </linearGradient>
-      </defs>
-      <path d="M46 36H20a10 10 0 0 1-2-19.8 13 13 0 0 1 25.3-3.8A10 10 0 0 1 46 36z" fill="url(#rainCloud)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.25))"/>
-      <g stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round">
-        <line x1="22" y1="42" x2="19" y2="50" />
-        <line x1="32" y1="42" x2="29" y2="50" />
-        <line x1="42" y1="42" x2="39" y2="50" />
-      </g>
-    </svg>`;
-  } else if (code >= 80) {
-    // Mưa rào / giông bão
-    return `<svg class="weatherSvg" width="68" height="68" viewBox="0 0 64 64" fill="none">
-      <defs>
-        <linearGradient id="thunderCloud" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#94A3B8" />
-          <stop offset="100%" stop-color="#334155" />
-        </linearGradient>
-      </defs>
-      <path d="M46 34H20a10 10 0 0 1-2-19.8 13 13 0 0 1 25.3-3.8A10 10 0 0 1 46 34z" fill="url(#thunderCloud)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))"/>
-      <polygon points="31,32 25,43 31,43 28,54 38,41 33,41" fill="#FACC15" filter="drop-shadow(0 0 6px rgba(250,204,21,0.8))"/>
-    </svg>`;
-  } else {
-    // Mặc định: Có mây rải rác / Nắng nhẹ
-    return `<svg class="weatherSvg" width="68" height="68" viewBox="0 0 64 64" fill="none">
-      <defs>
-        <linearGradient id="sunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FDB813" />
-          <stop offset="100%" stop-color="#F57C00" />
-        </linearGradient>
-        <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#FFFFFF" />
-          <stop offset="100%" stop-color="#E2E8F0" />
-        </linearGradient>
-      </defs>
-      <circle cx="26" cy="24" r="12" fill="url(#sunGrad)" filter="drop-shadow(0 0 6px rgba(253,184,19,0.5))"/>
-      <g stroke="#FFA000" stroke-width="2.5" stroke-linecap="round">
-        <line x1="26" y1="6" x2="26" y2="9" />
-        <line x1="13" y1="13" x2="15" y2="15" />
-        <line x1="8" y1="24" x2="11" y2="24" />
-        <line x1="39" y1="13" x2="37" y2="15" />
-      </g>
-      <path d="M48 48H22a11 11 0 0 1-2.2-21.8 14 14 0 0 1 27.2-4.2A11 11 0 0 1 48 48z" fill="url(#cloudGrad)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.25))"/>
-    </svg>`;
-  }
-}
-
-const WEATHER_LOC_KEY = 'citiship_weather_loc';
-
-// Lấy thông tin thời tiết theo tọa độ (mặc định hoặc GPS)
-async function fetchWeatherByCoords(lat, lon, locationName) {
-  try {
-    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
-    if (!res.ok) return;
-    const data = await res.json();
-    const currentTemp = Math.round(data.current.temperature_2m);
-    const minTemp = Math.round(data.daily.temperature_2m_min[0]);
-    const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
-    
-    const cityEl = document.getElementById('weather-city');
-    const tempEl = document.getElementById('weather-temp');
-    const minEl = document.getElementById('weather-min');
-    const maxEl = document.getElementById('weather-max');
-    const descEl = document.getElementById('weather-desc');
-    const iconWrap = document.getElementById('weather-icon-wrap');
-
-    if (cityEl && locationName) cityEl.innerText = `📍 ${locationName.toUpperCase()}`;
-    if (tempEl) tempEl.innerText = `${currentTemp}°`;
-    if (minEl) minEl.innerText = `${minTemp}°`;
-    if (maxEl) maxEl.innerText = `${maxTemp}°`;
-    
-    const code = data.current.weather_code;
-    let desc = 'CÓ MÂY · ĐI CA TỐT';
-    if (code === 0) desc = 'NẮNG RÁO · ĐI CA TỐT ☀️';
-    else if (code <= 3) desc = 'CÓ MÂY RẢI RÁC ⛅';
-    else if (code >= 51 && code <= 67) desc = 'CÓ MƯA NHỎ 🌧️';
-    else if (code >= 80) desc = 'CÓ MƯA RÀO ⛈️';
-    
-    if (descEl) descEl.innerText = desc;
-    if (iconWrap) iconWrap.innerHTML = getWeatherIconSvg(code);
-  } catch (e) {
-    // Giữ nguyên giá trị khi offline
-  }
-}
-
-// Lấy tên địa danh (Quận/Huyện, Tỉnh/TP) từ tọa độ GPS qua BigDataCloud
-async function getReverseGeocodeName(lat, lon) {
-  try {
-    const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=vi`);
-    if (!res.ok) return null;
-    const data = await res.json();
-    const locality = data.locality || data.district || '';
-    const city = data.city || data.principalSubdivision || '';
-    if (locality && city) {
-      return locality.toLowerCase().includes(city.toLowerCase()) ? locality : `${locality}, ${city}`;
-    }
-    return locality || city || null;
-  } catch (e) {
-    return null;
-  }
-}
-
-// Cập nhật thời tiết thông minh: Tự động lấy GPS nếu được cấp quyền hoặc dùng Ninh Kiều
-function updateSmartWeather(requestGps = false) {
-  let defaultLat = 10.03;
-  let defaultLon = 105.78;
-  let defaultName = 'NINH KIỀU, CẦN THƠ';
-
-  // 1. Kiểm tra vị trí đã lưu trong máy
-  const saved = localStorage.getItem(WEATHER_LOC_KEY);
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      if (parsed.lat && parsed.lon) {
-        defaultLat = parsed.lat;
-        defaultLon = parsed.lon;
-        defaultName = parsed.name || defaultName;
-      }
-    } catch(e) {}
-  }
-
-  // Tải trước dữ liệu với vị trí hiện tại
-  fetchWeatherByCoords(defaultLat, defaultLon, defaultName);
-
-  // 2. Kích hoạt GPS khi người dùng bấm hoặc chưa lưu vị trí
-  if (navigator.geolocation && (requestGps || !saved)) {
-    const cityEl = document.getElementById('weather-city');
-    if (requestGps && cityEl) cityEl.innerText = '🛰️ ĐANG ĐỊNH VỊ GPS...';
-
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = Number(pos.coords.latitude.toFixed(4));
-        const lon = Number(pos.coords.longitude.toFixed(4));
-        const geoName = await getReverseGeocodeName(lat, lon);
-        const finalName = geoName || 'VỊ TRÍ CỦA BẠN';
-        localStorage.setItem(WEATHER_LOC_KEY, JSON.stringify({ lat, lon, name: finalName }));
-        fetchWeatherByCoords(lat, lon, finalName);
-      },
-      (err) => {
-        console.log('GPS không kích hoạt hoặc từ chối, dùng vị trí:', defaultName);
-        fetchWeatherByCoords(defaultLat, defaultLon, defaultName);
-      },
-      { timeout: 8000, maximumAge: 300000 }
-    );
-  }
-}
-
 // Render Trang chủ
 function renderHome() {
   const user = getUser();
@@ -820,36 +644,10 @@ function renderHome() {
 
   app.innerHTML = `
     <div class="home-hero-wrap">
-      <div class="home-hero-left">
-        <div class="hero-badge">🛵 CITISHIP CẦN THƠ · CẨM NANG ĐỐI TÁC</div>
-        <h1>${SITE.title}</h1>
-        <p class="intro">${SITE.intro}</p>
-        ${progressBanner}
-      </div>
-      <div class="home-hero-right">
-        <!-- Widget Thời tiết thông minh theo vị trí -->
-        <div class="weatherCardContainer" onclick="updateSmartWeather(true)" title="Chạm để định vị GPS theo vị trí của bạn">
-          <div class="weatherCard">
-            <p class="weatherCity" id="weather-city">📍 NINH KIỀU, CẦN THƠ</p>
-            <p class="weatherStatus" id="weather-desc">ĐANG CẬP NHẬT...</p>
-            <div id="weather-icon-wrap">
-              ${getWeatherIconSvg(2)}
-            </div>
-            <p class="weatherTemp" id="weather-temp">--°</p>
-            <div class="weatherMinmax">
-              <div class="weatherMin">
-                <p class="weatherMinHeading">Min</p>
-                <p class="weatherMinTemp" id="weather-min">--°</p>
-              </div>
-              <div class="weatherMax">
-                <p class="weatherMaxHeading">Max</p>
-                <p class="weatherMaxTemp" id="weather-max">--°</p>
-              </div>
-            </div>
-            <span class="weather-gps-hint">🎯 Chạm để định vị GPS</span>
-          </div>
-        </div>
-      </div>
+      <div class="hero-badge">🛵 CITISHIP CẦN THƠ · CẨM NANG ĐỐI TÁC</div>
+      <h1>${SITE.title}</h1>
+      <p class="intro">${SITE.intro}</p>
+      ${progressBanner}
     </div>
     <div class="grid">
       ${PAGES.map(p => {
@@ -865,6 +663,9 @@ function renderHome() {
       }).join('')}
     </div>
     <footer class="site-footer">
+      <div class="footer-notice">
+        ⚖️ <b>Lưu ý nội bộ:</b> Tài liệu lưu hành nội bộ của Công ty Citiship. Mọi chính sách chiết khấu, quy trình đi đơn và chế tài xử lý vi phạm do Ban Điều hành Citiship phê duyệt và có hiệu lực thi hành đối với tất cả Đối tác tài xế.
+      </div>
       <p>© 2026 Citiship Cần Thơ · Đồng hành cùng Đối tác tài xế</p>
       <div class="footer-links">
         <a href="https://t.me/citiship_cantho" target="_blank" rel="noopener">💬 Hỗ trợ Telegram</a>
@@ -872,8 +673,6 @@ function renderHome() {
         <a href="#admin" class="footer-admin-link">🔒 Quản trị hệ thống</a>
       </div>
     </footer>`;
-
-  updateSmartWeather();
 }
 
 // Trang đọc từng bước
@@ -971,22 +770,6 @@ function route() {
 
 window.addEventListener('hashchange', route);
 route();
-
-// Tự động cập nhật thời tiết liên tục (mỗi 15 phút)
-setInterval(() => {
-  const hash = location.hash.replace(/^#\/?/, '');
-  if (!hash || hash === '') {
-    updateSmartWeather();
-  }
-}, 15 * 60 * 1000);
-
-// Cập nhật ngay khi người dùng chuyển lại tab làm việc
-window.addEventListener('focus', () => {
-  const hash = location.hash.replace(/^#\/?/, '');
-  if (!hash || hash === '') {
-    updateSmartWeather();
-  }
-});
 
 // Tính năng Phóng to ảnh (Image Lightbox Zoom)
 function initImageLightbox() {
