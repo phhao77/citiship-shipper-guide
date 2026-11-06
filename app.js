@@ -74,6 +74,21 @@ function toggleTheme() {
 // Khởi chạy kiểm tra Dark Mode ngay
 initTheme();
 
+// Helper kiểm tra nhóm vai trò Shipper
+function isShipperRole(role) {
+  return role === 'shipper' || role === 'shipper_cu' || role === 'shipper_moi';
+}
+
+function getRoleInfo(role) {
+  if (role === 'tongdai') {
+    return { name: 'Tổng đài', cls: 'role-td' };
+  }
+  if (role === 'shipper_moi') {
+    return { name: 'Shipper Mới', cls: 'role-sp-moi' };
+  }
+  return { name: 'Đang chạy', cls: 'role-sp' };
+}
+
 // Hiển thị pill thông tin user trên topbar
 function renderUserPill() {
   const user = getUser();
@@ -89,13 +104,12 @@ function renderUserPill() {
     return;
   }
 
-  const roleText = user.role === 'tongdai' ? 'Tổng đài' : 'Shipper';
-  const roleClass = user.role === 'tongdai' ? 'role-td' : 'role-sp';
+  const roleInfo = getRoleInfo(user.role);
   userInfoEl.innerHTML = `
     ${themeBtn}
     ${adminBtn}
     <span class="pill-name">${user.name}</span>
-    <span class="pill-role ${roleClass}">${roleText}</span>
+    <span class="pill-role ${roleInfo.cls}">${roleInfo.name}</span>
     <button class="btn-logout" title="Đổi thông tin" onclick="logoutUser()">Đổi</button>
   `;
 }
@@ -109,7 +123,7 @@ function logoutUser() {
   }
 }
 
-// Modal Đăng nhập / Nhập thông tin bắt buộc
+// Modal Đăng nhập / Nhập thông tin bắt buộc với 3 Role
 function showLoginModal() {
   loginModal.style.display = 'flex';
   loginModal.innerHTML = `
@@ -117,15 +131,19 @@ function showLoginModal() {
       <div class="modal-header">
         <img src="images/citiship-logo.png" alt="Logo" class="modal-logo">
         <h2>Thông tin Người xem</h2>
-        <p>Vui lòng nhập thông tin trước khi đọc nội quy & quy trình</p>
+        <p>Vui lòng chọn đúng vai trò trước khi đọc nội quy & quy trình</p>
       </div>
       <form id="login-form" onsubmit="handleLoginSubmit(event)">
         <div class="form-group">
           <label>Vai trò của bạn:</label>
-          <div class="role-selector">
+          <div class="role-selector role-selector-3">
             <label class="role-opt">
-              <input type="radio" name="role" value="shipper" checked onchange="togglePhoneReq(true)">
-              <span>🛵 Shipper (Đối tác)</span>
+              <input type="radio" name="role" value="shipper_cu" checked onchange="togglePhoneReq(true)">
+              <span>🚚 Shipper đang chạy</span>
+            </label>
+            <label class="role-opt">
+              <input type="radio" name="role" value="shipper_moi" onchange="togglePhoneReq(true)">
+              <span>🔰 Shipper mới / Thử việc</span>
             </label>
             <label class="role-opt">
               <input type="radio" name="role" value="tongdai" onchange="togglePhoneReq(false)">
@@ -142,10 +160,10 @@ function showLoginModal() {
         <div class="form-group" id="phone-group">
           <label for="user-phone">Số điện thoại (dùng chạy app):</label>
           <input type="tel" id="user-phone" required placeholder="Ví dụ: 0912345678" pattern="[0-9]{9,11}" autocomplete="tel">
-          <small class="form-hint">Số điện thoại dùng để lưu tiến độ xác nhận đọc quy định</small>
+          <small class="form-hint">Dùng để lưu tiến độ xác nhận đọc và bài kiểm tra sát hạch</small>
         </div>
 
-        <button type="submit" class="btn-submit" id="btn-save-user">Bắt đầu đọc</button>
+        <button type="submit" class="btn-submit" id="btn-save-user">Bắt đầu ngay</button>
       </form>
     </div>
   `;
@@ -154,12 +172,14 @@ function showLoginModal() {
 function togglePhoneReq(isShipper) {
   const phoneGroup = document.getElementById('phone-group');
   const phoneInput = document.getElementById('user-phone');
-  if (isShipper) {
-    phoneGroup.style.display = 'block';
-    phoneInput.required = true;
-  } else {
-    phoneGroup.style.display = 'none';
-    phoneInput.required = false;
+  if (phoneGroup && phoneInput) {
+    if (isShipper) {
+      phoneGroup.style.display = 'block';
+      phoneInput.required = true;
+    } else {
+      phoneGroup.style.display = 'none';
+      phoneInput.required = false;
+    }
   }
 }
 
@@ -167,10 +187,11 @@ async function handleLoginSubmit(e) {
   e.preventDefault();
   const name = document.getElementById('user-name').value.trim();
   const role = document.querySelector('input[name="role"]:checked').value;
-  const phone = role === 'shipper' ? document.getElementById('user-phone').value.trim() : '0000000000';
+  const isShip = isShipperRole(role);
+  const phone = isShip ? document.getElementById('user-phone').value.trim() : '0000000000';
 
   if (!name) return alert('Vui lòng nhập Họ và Tên!');
-  if (role === 'shipper' && (!phone || phone.length < 9)) {
+  if (isShip && (!phone || phone.length < 9)) {
     return alert('Vui lòng nhập số điện thoại hợp lệ!');
   }
 
@@ -182,7 +203,7 @@ async function handleLoginSubmit(e) {
   setUser(user);
 
   // Nếu là Shipper, đồng bộ hoặc khởi tạo trên Supabase
-  if (role === 'shipper' && supabaseClient) {
+  if (isShip && supabaseClient) {
     try {
       const { data, error } = await supabaseClient
         .from('shipper_confirmations')
@@ -197,14 +218,29 @@ async function handleLoginSubmit(e) {
           if (data[col]) confirmed[pId] = true;
         }
         setLocalConfirmed(confirmed);
+
+        // Đồng bộ điểm thi nếu đã có
+        if (data.exam_score !== undefined && data.exam_score !== null) {
+          user.exam_score = data.exam_score;
+          user.exam_status = data.exam_status;
+          setUser(user);
+        }
+
+        // Cập nhật lại role và họ tên mới nhất
+        await supabaseClient.from('shipper_confirmations').update({
+          name: name,
+          role: role,
+          updated_at: new Date().toISOString()
+        }).eq('phone', phone);
       } else {
         // Chưa có thì tạo dòng mới
+        const initStatus = role === 'shipper_moi' ? 'Shipper mới (Chưa thi)' : 'Đang đọc (0/8)';
         await supabaseClient.from('shipper_confirmations').insert([{
           phone: phone,
           name: name,
-          role: 'shipper',
+          role: role,
           progress: '0/8',
-          status: 'Đang đọc (0/8)'
+          status: initStatus
         }]);
       }
     } catch (err) {
@@ -220,7 +256,7 @@ async function handleLoginSubmit(e) {
 // Bấm nút Xác nhận đã đọc & hiểu rõ
 async function confirmPage(pageId) {
   const user = getUser();
-  if (!user || user.role !== 'shipper') return;
+  if (!user || !isShipperRole(user.role)) return;
 
   const btn = document.getElementById('btn-confirm-' + pageId);
   if (btn) {
@@ -233,38 +269,49 @@ async function confirmPage(pageId) {
   confirmed[pageId] = true;
   setLocalConfirmed(confirmed);
 
+  const count = Object.keys(confirmed).length;
+  const progressText = `${count}/8`;
+  let statusText = `Đang đọc (${count}/8)`;
+
+  if (count === 8) {
+    if (user.role === 'shipper_moi') {
+      statusText = user.exam_status === 'passed' ? `ĐẬU SÁT HẠCH (${user.exam_score}/22)` : 'Đã đọc 8/8 (Chờ thi)';
+    } else {
+      statusText = 'HOÀN THÀNH ✅';
+    }
+  }
+
   // 2. Đồng bộ lên Supabase
   if (supabaseClient) {
     try {
       const colName = PAGE_COL_MAP[pageId];
-      const count = Object.keys(confirmed).length;
-      const progressText = `${count}/8`;
-      const statusText = count === 8 ? 'HOÀN THÀNH ✅' : `Đang đọc (${count}/8)`;
-
       const updateData = {
         name: user.name,
-        role: 'shipper',
+        role: user.role,
         progress: progressText,
         status: statusText,
         updated_at: new Date().toISOString()
       };
       if (colName) updateData[colName] = true;
 
-      const { error } = await supabaseClient
+      await supabaseClient
         .from('shipper_confirmations')
         .upsert({
           phone: user.phone,
           ...updateData
         }, { onConflict: 'phone' });
-
-      if (error) console.error('Supabase update error:', error);
     } catch (err) {
       console.warn('Không thể gửi lên Supabase:', err);
     }
   }
 
-  alert('Đã ghi nhận bạn hiểu rõ quy định này! Cảm ơn bạn.');
-  location.hash = '#/';
+  if (user.role === 'shipper_moi' && count === 8) {
+    alert('🎉 Chúc mừng bạn đã đọc và xác nhận đủ 8/8 mục nội quy!\nHệ thống sẽ mở khóa và chuyển bạn đến Bài Kiểm Tra Sát Hạch Kiến Thức (22 câu).');
+    location.hash = '#/exam';
+  } else {
+    alert('Đã ghi nhận bạn hiểu rõ quy định này! Cảm ơn bạn.');
+    location.hash = '#/';
+  }
 }
 
 // Trang Quản Trị / Báo Cáo (#/admin)
@@ -320,9 +367,13 @@ async function renderAdmin() {
         </div>
         <div class="filter-select-wrap">
           <select id="admin-status-filter" onchange="filterAdminTable()">
-            <option value="all">Tất cả trạng thái</option>
-            <option value="done">Đã hoàn thành (8/8)</option>
+            <option value="all">Tất cả đối tác</option>
+            <option value="done">Đã đọc đủ 8/8</option>
             <option value="reading">Đang đọc dở (< 8/8)</option>
+            <option value="moi">🔰 Shipper Mới</option>
+            <option value="cu">🚚 Shipper Đang chạy</option>
+            <option value="exam_pass">🏆 Đã Đậu Sát Hạch</option>
+            <option value="exam_pending">⚠️ Shipper Mới chưa đậu</option>
           </select>
         </div>
         <div class="admin-result-count" id="admin-result-count">Đang tải...</div>
@@ -371,8 +422,8 @@ function renderAdminStats(list) {
 
   const total = list.length;
   const completed = list.filter(item => item.progress === '8/8' || (item.status && item.status.includes('HOÀN THÀNH'))).length;
-  const reading = total - completed;
-  const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const shipperMoiCount = list.filter(item => item.role === 'shipper_moi').length;
+  const examPassedCount = list.filter(item => item.exam_status === 'passed' || (item.exam_score >= 19)).length;
 
   statsContainer.innerHTML = `
     <div class="admin-stats-grid">
@@ -387,21 +438,21 @@ function renderAdminStats(list) {
         <div class="stat-icon-wrap stat-green">✅</div>
         <div class="stat-content">
           <div class="stat-num">${completed}</div>
-          <div class="stat-lbl">Đã hoàn thành (8/8)</div>
+          <div class="stat-lbl">Đã đọc đủ (8/8)</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon-wrap stat-orange">📖</div>
+        <div class="stat-icon-wrap stat-orange">🔰</div>
         <div class="stat-content">
-          <div class="stat-num">${reading}</div>
-          <div class="stat-lbl">Đang đọc dở</div>
+          <div class="stat-num">${shipperMoiCount}</div>
+          <div class="stat-lbl">Shipper Mới</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon-wrap stat-purple">📈</div>
+        <div class="stat-icon-wrap stat-purple">🏆</div>
         <div class="stat-content">
-          <div class="stat-num">${percent}%</div>
-          <div class="stat-lbl">Tỷ lệ hoàn tất</div>
+          <div class="stat-num">${examPassedCount}</div>
+          <div class="stat-lbl">Đã Đậu Sát Hạch</div>
         </div>
       </div>
     </div>
@@ -474,6 +525,27 @@ function renderAdminTable(list) {
     }
     const percentDone = Math.round((countDone / 8) * 100);
 
+    // Huy hiệu Vai trò
+    const isMoi = item.role === 'shipper_moi';
+    const roleBadge = isMoi 
+      ? `<span class="badge-role-moi">🔰 Shipper Mới</span>` 
+      : `<span class="badge-role-cu">🚚 Đang chạy</span>`;
+
+    // Huy hiệu Điểm thi Sát hạch
+    let examBadge = '';
+    if (isMoi) {
+      if (item.exam_score !== undefined && item.exam_score !== null) {
+        const isPass = item.exam_status === 'passed' || item.exam_score >= 19;
+        examBadge = isPass 
+          ? `<span class="badge-exam-pass" title="Đạt chuẩn (≥19/22)">ĐẬU (${item.exam_score}/22)</span>`
+          : `<span class="badge-exam-fail" title="Chưa đạt chuẩn (<19/22)">RỚT (${item.exam_score}/22)</span>`;
+      } else {
+        examBadge = `<span class="badge-exam-none">Chưa thi</span>`;
+      }
+    } else {
+      examBadge = `<span class="badge-exam-na" title="Shipper cũ miễn thi">Miễn thi</span>`;
+    }
+
     return `
       <tr>
         <td class="col-stt">${idx + 1}</td>
@@ -481,6 +553,7 @@ function renderAdminTable(list) {
           <div class="shipper-name">${item.name}</div>
         </td>
         <td class="col-phone"><span class="phone-chip">${item.phone}</span></td>
+        <td class="col-role">${roleBadge}</td>
         <td class="col-tick">${tick(item.chinh_sach)}</td>
         <td class="col-tick">${tick(item.quy_dinh)}</td>
         <td class="col-tick">${tick(item.trung_thuc)}</td>
@@ -495,6 +568,7 @@ function renderAdminTable(list) {
             <div class="mini-progress-bar"><div class="mini-bar-fill ${countDone === 8 ? 'fill-full' : ''}" style="width: ${percentDone}%"></div></div>
           </div>
         </td>
+        <td class="col-exam">${examBadge}</td>
         <td class="col-status">${statusBadge}</td>
         <td class="col-time">${timeStr}</td>
       </tr>
@@ -508,15 +582,17 @@ function renderAdminTable(list) {
           <th class="col-stt">STT</th>
           <th class="col-name">Họ và Tên</th>
           <th class="col-phone">Số điện thoại</th>
-          <th class="col-tick" title="1. Chính sách, chiết khấu">1. Chính sách</th>
-          <th class="col-tick" title="2. Quy định">2. Quy định</th>
-          <th class="col-tick" title="3. Trung thực & thái độ">3. Thái độ</th>
-          <th class="col-tick" title="4. Quy trình xử lý đơn">4. Quy trình</th>
-          <th class="col-tick" title="5. Hướng dẫn thao tác app">5. HD App</th>
-          <th class="col-tick" title="6. Tài khoản">6. Tài khoản</th>
-          <th class="col-tick" title="7. Bảng lệnh">7. Bảng lệnh</th>
-          <th class="col-tick" title="8. Hỗ trợ">8. Hỗ trợ</th>
-          <th class="col-progress">Tiến độ</th>
+          <th class="col-role">Vai trò</th>
+          <th class="col-tick" title="1. Chính sách, chiết khấu">1. CS</th>
+          <th class="col-tick" title="2. Quy định">2. QĐ</th>
+          <th class="col-tick" title="3. Trung thực & thái độ">3. TĐ</th>
+          <th class="col-tick" title="4. Quy trình xử lý đơn">4. QT</th>
+          <th class="col-tick" title="5. Hướng dẫn thao tác app">5. HD</th>
+          <th class="col-tick" title="6. Tài khoản">6. TK</th>
+          <th class="col-tick" title="7. Bảng lệnh">7. BL</th>
+          <th class="col-tick" title="8. Hỗ trợ">8. HT</th>
+          <th class="col-progress">Đã đọc</th>
+          <th class="col-exam">Sát hạch</th>
           <th class="col-status">Trạng thái</th>
           <th class="col-time">Cập nhật</th>
         </tr>
@@ -535,10 +611,16 @@ function filterAdminTable() {
   const filtered = cachedAdminList.filter(item => {
     const matchQ = (item.name && item.name.toLowerCase().includes(q)) || (item.phone && item.phone.includes(q));
     const isCompleted = item.progress === '8/8' || (item.status && item.status.includes('HOÀN THÀNH'));
-    
+    const isMoi = item.role === 'shipper_moi';
+    const isPassed = item.exam_status === 'passed' || item.exam_score >= 19;
+
     let matchStatus = true;
     if (statusFilter === 'done') matchStatus = isCompleted;
     if (statusFilter === 'reading') matchStatus = !isCompleted;
+    if (statusFilter === 'moi') matchStatus = isMoi;
+    if (statusFilter === 'cu') matchStatus = !isMoi;
+    if (statusFilter === 'exam_pass') matchStatus = isPassed;
+    if (statusFilter === 'exam_pending') matchStatus = isMoi && !isPassed;
 
     return matchQ && matchStatus;
   });
@@ -551,14 +633,25 @@ function exportToCSV() {
   if (!cachedAdminList || cachedAdminList.length === 0) return alert('Không có dữ liệu để xuất!');
   
   let csv = '\uFEFF'; // BOM UTF-8 để Excel hiển thị đúng tiếng Việt
-  csv += 'STT,Họ và Tên,Số điện thoại,Chính sách,Quy định,Trung thực,Quy trình,Thao tác app,Tài khoản,Bảng lệnh,Hỗ trợ,Tiến độ,Trạng thái,Thời gian cập nhật\n';
+  csv += 'STT,Họ và Tên,Số điện thoại,Vai trò,Chính sách,Quy định,Trung thực,Quy trình,Thao tác app,Tài khoản,Bảng lệnh,Hỗ trợ,Tiến độ đọc,Điểm sát hạch,Trạng thái tổng,Thời gian cập nhật\n';
 
   cachedAdminList.forEach((item, idx) => {
     const t = (val) => val ? 'Đã hiểu' : 'Chưa';
+    const roleTxt = item.role === 'shipper_moi' ? 'Shipper Mới' : 'Shipper Đang chạy';
+    let examTxt = 'Miễn thi';
+    if (item.role === 'shipper_moi') {
+      if (item.exam_score !== undefined && item.exam_score !== null) {
+        examTxt = `${item.exam_score}/22 (${item.exam_status === 'passed' || item.exam_score >= 19 ? 'ĐẬU' : 'RỚT'})`;
+      } else {
+        examTxt = 'Chưa thi';
+      }
+    }
+
     const row = [
       idx + 1,
       `"${item.name || ''}"`,
       `"${item.phone || ''}"`,
+      `"${roleTxt}"`,
       t(item.chinh_sach),
       t(item.quy_dinh),
       t(item.trung_thuc),
@@ -568,6 +661,7 @@ function exportToCSV() {
       t(item.lenh_telegram),
       t(item.ho_tro),
       item.progress || '0/8',
+      `"${examTxt}"`,
       `"${item.status || ''}"`,
       `"${item.updated_at || ''}"`
     ];
@@ -628,18 +722,77 @@ function renderHome() {
   document.title = SITE.title;
   const confirmed = getLocalConfirmed();
   const confirmedCount = Object.keys(confirmed).length;
+  const isShip = isShipperRole(user.role);
 
   let progressBanner = '';
-  if (user.role === 'shipper') {
-    progressBanner = `
-      <div class="user-progress-box">
-        <div class="up-text">
-          <span>Tiến độ đọc của <b>${user.name}</b>:</span>
-          <b>${confirmedCount} / 8 mục đã xác nhận</b>
+  if (isShip) {
+    if (user.role === 'shipper_moi') {
+      const hasPassed = user.exam_status === 'passed' || (user.exam_score >= 19);
+      const hasTaken = user.exam_score !== undefined && user.exam_score !== null;
+
+      let examActionCard = '';
+      if (confirmedCount < 8) {
+        examActionCard = `
+          <div class="new-shipper-card locked">
+            <div class="nsc-icon">🔒</div>
+            <div class="nsc-content">
+              <h4>Lộ trình Sát hạch Shipper Mới:</h4>
+              <p>Bạn cần đọc và bấm xác nhận đủ <b>8/8 mục</b> bên dưới để mở khóa <b>Bài Kiểm Tra Sát Hạch Kiến Thức (22 câu)</b>.</p>
+              <div class="nsc-badge">Đã hoàn thành: <b>${confirmedCount} / 8 mục</b></div>
+            </div>
+          </div>
+        `;
+      } else if (hasPassed) {
+        examActionCard = `
+          <div class="new-shipper-card passed">
+            <div class="nsc-icon">🏆</div>
+            <div class="nsc-content">
+              <h4>Chúc mừng! Bạn đã ĐẠT bài thi sát hạch Citiship!</h4>
+              <p>Điểm số sát hạch: <b>${user.exam_score} / 22 câu (Đạt chuẩn ≥ 19/22)</b>. Dữ liệu đã được lưu trên hệ thống để cấp phép vào ca hoạt động.</p>
+              <div class="nsc-actions">
+                <a href="#/exam-result" class="btn-exam-outline">📄 Xem lại kết quả thi</a>
+                <a href="#/exam" class="btn-exam-outline">🔄 Làm lại bài thi</a>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        // Đã đọc 8/8 nhưng chưa thi hoặc rớt
+        examActionCard = `
+          <div class="new-shipper-card unlocked-pulse">
+            <div class="nsc-icon">🎉</div>
+            <div class="nsc-content">
+              <h4>Đã đọc trọn vẹn 8/8 mục! Bước tiếp theo:</h4>
+              <p>Vui lòng hoàn thành <b>Bài Kiểm Tra Sát Hạch Kiến Thức (22 câu tình huống)</b> để kiểm tra mức độ hiểu quy trình.</p>
+              ${hasTaken ? `<p class="exam-prev-score">Điểm lần trước: <span class="score-fail">${user.exam_score} / 22 câu (Chưa đạt)</span>. Yêu cầu: Đúng ≥ 19/22 câu.</p>` : ''}
+              <a href="#/exam" class="btn-start-exam">✍️ VÀO PHÒNG THI SÁT HẠCH NGAY (22 CÂU) →</a>
+            </div>
+          </div>
+        `;
+      }
+
+      progressBanner = `
+        <div class="user-progress-box">
+          <div class="up-text">
+            <span>Tiến độ đọc của <b>${user.name}</b> (Shipper Mới):</span>
+            <b>${confirmedCount} / 8 mục đã xác nhận</b>
+          </div>
+          <div class="progress"><div class="bar" style="width:${(confirmedCount / 8) * 100}%"></div></div>
         </div>
-        <div class="progress"><div class="bar" style="width:${(confirmedCount / 8) * 100}%"></div></div>
-      </div>
-    `;
+        ${examActionCard}
+      `;
+    } else {
+      // Shipper đang chạy
+      progressBanner = `
+        <div class="user-progress-box">
+          <div class="up-text">
+            <span>Tiến độ đọc của <b>${user.name}</b>:</span>
+            <b>${confirmedCount} / 8 mục đã xác nhận</b>
+          </div>
+          <div class="progress"><div class="bar" style="width:${(confirmedCount / 8) * 100}%"></div></div>
+        </div>
+      `;
+    }
   }
 
   app.innerHTML = `
@@ -651,7 +804,7 @@ function renderHome() {
     </div>
     <div class="grid">
       ${PAGES.map(p => {
-        const isDone = user.role === 'shipper' && confirmed[p.id];
+        const isDone = isShip && confirmed[p.id];
         return `
           <a class="card ${isDone ? 'card-done' : ''}" href="#/${p.id}">
             <span class="ico ${p.tone}">${p.icon}</span>
@@ -675,6 +828,296 @@ function renderHome() {
     </footer>`;
 }
 
+// State lưu câu trả lời bài thi tạm thời
+let currentExamAnswers = {};
+
+// Giao diện Phòng thi Sát hạch (#/exam)
+function renderExam() {
+  const user = getUser();
+  if (!user) {
+    showLoginModal();
+    return;
+  }
+
+  document.title = 'Phòng thi Sát hạch Kiến thức - Citiship';
+  const confirmed = getLocalConfirmed();
+  const confirmedCount = Object.keys(confirmed).length;
+
+  // Nếu chưa đọc đủ 8 mục: Không cho làm bài
+  if (confirmedCount < 8) {
+    document.body.classList.remove('in-exam-mode');
+    app.innerHTML = `
+      <div class="exam-blocked-box">
+        <div class="eb-icon">⛔</div>
+        <h2>Chưa thể vào phòng thi</h2>
+        <p>Bạn cần đọc và bấm xác nhận đủ <b>8/8 mục nội quy</b> trước khi tham gia bài sát hạch kiến thức.</p>
+        <div class="eb-progress">
+          <span>Tiến độ hiện tại của bạn:</span>
+          <b>${confirmedCount} / 8 mục đã đọc</b>
+        </div>
+        <div class="eb-actions">
+          <a href="#/" class="btn-admin-primary">← Quay lại đọc tiếp tài liệu</a>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Khóa phòng thi: ẩn topbar navigation
+  document.body.classList.add('in-exam-mode');
+
+  // Khôi phục câu trả lời cũ nếu có
+  if (user.exam_answers && Object.keys(currentExamAnswers).length === 0) {
+    currentExamAnswers = { ...user.exam_answers };
+  }
+
+  const answeredCount = Object.keys(currentExamAnswers).length;
+
+  const questionsHtml = EXAM_QUESTIONS.map((q, idx) => {
+    const selected = currentExamAnswers[q.id];
+    return `
+      <div class="exam-qcard" id="qcard-${q.id}">
+        <div class="qcard-header">
+          <span class="qcard-num">Câu ${idx + 1} / 22</span>
+          <span class="qcard-cat">${q.category}</span>
+        </div>
+        <div class="qcard-title">${q.question}</div>
+        <div class="qcard-options">
+          ${q.options.map((opt, oIdx) => {
+            const isChecked = selected === oIdx;
+            return `
+              <label class="opt-label ${isChecked ? 'opt-checked' : ''}" id="opt-label-${q.id}-${oIdx}">
+                <input type="radio" name="q_${q.id}" value="${oIdx}" ${isChecked ? 'checked' : ''} onchange="handleExamSelect(${q.id}, ${oIdx})">
+                <span class="opt-indicator"></span>
+                <span class="opt-text">${opt}</span>
+              </label>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="exam-page-container">
+      <div class="exam-topbar">
+        <div class="exam-brand-row">
+          <span class="exam-badge-tag">🔒 PHÒNG THI SÁT HẠCH</span>
+          <span class="exam-user-tag">Tài xế: <b>${user.name}</b> (${user.phone})</span>
+        </div>
+        <div class="exam-counter-pill">
+          <span>Tiến độ làm bài:</span>
+          <b id="exam-counter-txt">${answeredCount} / 22 câu</b>
+        </div>
+      </div>
+
+      <div class="exam-intro-card">
+        <h2>📝 BÀI KIỂM TRA SÁT HẠCH KIẾN THỨC SHIPPER MỚI</h2>
+        <p>Đề thi gồm <b>22 câu hỏi tình huống thực tế</b> bám sát 8 mục quy trình hoạt động của Citiship.</p>
+        <div class="exam-rules-note">
+          <div class="ern-item">🚫 <b>Chế độ làm bài:</b> Không rời khỏi trang này trong lúc làm bài.</div>
+          <div class="ern-item">🎯 <b>Tiêu chuẩn ĐẠT:</b> Đúng từ <b>19 / 22 câu</b> trở lên (≥ 85%).</div>
+        </div>
+      </div>
+
+      <form id="exam-form" onsubmit="handleExamSubmit(event)">
+        <div class="exam-questions-list">
+          ${questionsHtml}
+        </div>
+
+        <div class="exam-submit-bar">
+          <div class="exam-submit-info">
+            Vui lòng kiểm tra kỹ tất cả các câu trước khi bấm nộp bài.
+          </div>
+          <button type="submit" class="btn-submit-exam" id="btn-submit-exam">
+            NỘP BÀI THI KIỂM TRA 🚀
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  window.scrollTo(0, 0);
+}
+
+function handleExamSelect(qId, oIdx) {
+  currentExamAnswers[qId] = oIdx;
+
+  const answeredCount = Object.keys(currentExamAnswers).length;
+  const counterEl = document.getElementById('exam-counter-txt');
+  if (counterEl) {
+    counterEl.innerText = `${answeredCount} / 22 câu`;
+  }
+
+  const qcard = document.getElementById(`qcard-${qId}`);
+  if (qcard) {
+    qcard.classList.remove('qcard-missing');
+    const labels = qcard.querySelectorAll('.opt-label');
+    labels.forEach((lbl, idx) => {
+      lbl.classList.toggle('opt-checked', idx === oIdx);
+    });
+  }
+}
+
+async function handleExamSubmit(e) {
+  e.preventDefault();
+
+  const missingQIds = [];
+  EXAM_QUESTIONS.forEach(q => {
+    if (currentExamAnswers[q.id] === undefined) {
+      missingQIds.push(q.id);
+    }
+  });
+
+  if (missingQIds.length > 0) {
+    missingQIds.forEach(id => {
+      const qcard = document.getElementById(`qcard-${id}`);
+      if (qcard) qcard.classList.add('qcard-missing');
+    });
+
+    const firstMissing = document.getElementById(`qcard-${missingQIds[0]}`);
+    if (firstMissing) {
+      firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    alert(`Bạn còn ${missingQIds.length} câu chưa trả lời (đang được viền đỏ). Vui lòng trả lời hết 22 câu trước khi nộp bài!`);
+    return;
+  }
+
+  if (!confirm('Bạn đã trả lời đầy đủ 22 câu. Bạn có chắc chắn muốn nộp bài thi ngay không?')) {
+    return;
+  }
+
+  const submitBtn = document.getElementById('btn-submit-exam');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Đang chấm điểm và lưu kết quả...';
+  }
+
+  let correctCount = 0;
+  EXAM_QUESTIONS.forEach(q => {
+    if (currentExamAnswers[q.id] === q.answer) {
+      correctCount++;
+    }
+  });
+
+  const isPassed = correctCount >= 19;
+  const user = getUser();
+  user.exam_score = correctCount;
+  user.exam_status = isPassed ? 'passed' : 'failed';
+  user.exam_answers = { ...currentExamAnswers };
+  user.exam_completed_at = new Date().toISOString();
+  setUser(user);
+
+  // Đồng bộ kết quả lên Supabase
+  if (supabaseClient && user.phone) {
+    try {
+      const statusText = isPassed ? `ĐẬU SÁT HẠCH (${correctCount}/22)` : `RỚT SÁT HẠCH (${correctCount}/22)`;
+      await supabaseClient.from('shipper_confirmations').upsert({
+        phone: user.phone,
+        name: user.name,
+        role: user.role,
+        progress: '8/8',
+        status: statusText,
+        exam_score: correctCount,
+        exam_status: isPassed ? 'passed' : 'failed',
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'phone' });
+    } catch (err) {
+      console.warn('Lỗi lưu kết quả thi lên Supabase:', err);
+    }
+  }
+
+  document.body.classList.remove('in-exam-mode');
+  location.hash = '#/exam-result';
+}
+
+function renderExamResult() {
+  const user = getUser();
+  if (!user) {
+    showLoginModal();
+    return;
+  }
+
+  document.body.classList.remove('in-exam-mode');
+  document.title = 'Kết quả thi Sát hạch - Citiship';
+
+  const score = user.exam_score || 0;
+  const isPassed = user.exam_status === 'passed' || score >= 19;
+  const percent = Math.round((score / 22) * 100);
+  const answers = user.exam_answers || {};
+
+  const reviewListHtml = EXAM_QUESTIONS.map((q, idx) => {
+    const userChoice = answers[q.id];
+    const isCorrect = userChoice === q.answer;
+    return `
+      <div class="result-review-card ${isCorrect ? 'ans-correct' : 'ans-wrong'}">
+        <div class="rrc-top">
+          <span class="rrc-num">Câu ${idx + 1}: ${q.category}</span>
+          <span class="rrc-badge ${isCorrect ? 'badge-c' : 'badge-w'}">${isCorrect ? '✓ Đúng (+1đ)' : '✗ Chưa đúng (0đ)'}</span>
+        </div>
+        <div class="rrc-q">${q.question}</div>
+        <div class="rrc-options">
+          ${q.options.map((opt, oIdx) => {
+            const isUserPick = userChoice === oIdx;
+            const isAnswerKey = q.answer === oIdx;
+            let optClass = '';
+            let optTag = '';
+            if (isAnswerKey) {
+              optClass = 'opt-key';
+              optTag = ' <span class="tag-key">[ĐÁP ÁN ĐÚNG]</span>';
+            }
+            if (isUserPick) {
+              optClass += isCorrect ? ' opt-pick-correct' : ' opt-pick-wrong';
+              optTag += isCorrect ? ' <span class="tag-pick-c">[BẠN ĐÃ CHỌN]</span>' : ' <span class="tag-pick-w">[BẠN ĐÃ CHỌN]</span>';
+            }
+            return `<div class="rrc-opt-line ${optClass}">${opt}${optTag}</div>`;
+          }).join('')}
+        </div>
+        <div class="rrc-explain">
+          💡 <b>Giải thích chi tiết:</b> ${q.explanation}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="exam-result-container">
+      <div class="result-hero-card ${isPassed ? 'hero-pass' : 'hero-fail'}">
+        <div class="result-hero-icon">${isPassed ? '🏆' : '⚠️'}</div>
+        <h1>${isPassed ? 'XUẤT SẮC! BẠN ĐÃ ĐẠT BÀI THI SÁT HẠCH' : 'BẠN CHƯA ĐẠT TIÊU CHUẨN SÁT HẠCH'}</h1>
+        <div class="result-score-circle">
+          <div class="score-big">${score}<span>/22</span></div>
+          <div class="score-sub">Tỷ lệ chính xác: ${percent}%</div>
+        </div>
+        <p class="result-desc">
+          ${isPassed 
+            ? 'Chúc mừng bạn đã hoàn thành xuất sắc bài kiểm tra kiến thức Citiship. Kết quả đã được ghi nhận trên hệ thống Quản trị để cấp phép chính thức vào ca!' 
+            : 'Tiêu chuẩn đạt yêu cầu là đúng từ <b>19 / 22 câu</b> (≥ 85%). Vui lòng xem kỹ phần giải thích đáp án sai bên dưới và bấm nút <b>Thi lại</b> để hoàn tất sát hạch nhé!'}
+        </p>
+        <div class="result-actions">
+          <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
+          <a href="#/exam" class="btn-result-retake">${isPassed ? '🔄 Làm lại bài thi' : '⚡ Thi lại ngay'}</a>
+        </div>
+      </div>
+
+      <div class="result-review-section">
+        <h3>🔍 Bảng Chi Tiết Đáp Án & Lời Giải Thích (22 Câu)</h3>
+        <p class="review-sub">Đối chiếu câu trả lời của bạn với đáp án chuẩn của Citiship:</p>
+        <div class="review-cards-list">
+          ${reviewListHtml}
+        </div>
+        <div class="review-bottom-nav">
+          <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
+          <a href="#/exam" class="btn-result-retake">⚡ Làm lại bài thi</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  window.scrollTo(0, 0);
+}
+
 // Trang đọc từng bước
 function renderSteps(page, n) {
   const user = getUser();
@@ -696,7 +1139,7 @@ function renderSteps(page, n) {
     next = `<a class="btn primary" href="#/${page.id}/${i + 1}">Tiếp →</a>`;
   } else {
     // Bước cuối cùng: Nếu là Shipper thì hiện nút Xác nhận đã đọc
-    if (user.role === 'shipper') {
+    if (isShipperRole(user.role)) {
       if (isDone) {
         next = `<a class="btn confirmed-done" href="#/">✓ Đã xác nhận mục này</a>`;
       } else {
@@ -754,9 +1197,25 @@ function route() {
   document.body.classList.toggle('page-admin', isAdmin);
 
   if (isAdmin) {
+    document.body.classList.remove('in-exam-mode');
     renderAdmin();
     return;
   }
+
+  // Tuyến đường Phòng thi Sát hạch
+  if (hash === 'exam') {
+    renderExam();
+    return;
+  }
+
+  // Tuyến đường Kết quả thi
+  if (hash === 'exam-result') {
+    renderExamResult();
+    return;
+  }
+
+  // Rời khỏi phòng thi thì bỏ class khóa
+  document.body.classList.remove('in-exam-mode');
 
   const user = getUser();
   renderUserPill();

@@ -501,15 +501,15 @@ const PAGES = [
   { id: 'trung-thuc', icon: '🤝', tone: 'o', title: 'Trung thực & thái độ', summary: 'Tác phong với khách và cửa hàng',
     steps: [
       { title: 'Không nhận đơn riêng', html: `
-        <div class="quick-summary">🚫 Tuyệt đối không nhận đơn riêng ngoài hệ thống — Bảo vệ quyền lợi và bảo hiểm của chính bạn.</div>
+        <div class="quick-summary">🚫 Tuyệt đối không tự ý chạy đơn riêng ngoài hệ thống — Bảo vệ quyền lợi và an toàn của chính bạn.</div>
         <div class="rule-grid">
           <div class="rule-card do">
-            <h4>✔️ Cách xử lý đúng</h4>
-            <p>Nếu khách quen hoặc chủ shop liên hệ book riêng, vui lòng hướng dẫn khách liên hệ <b>Tổng đài để tạo đơn</b>.</p>
+            <h4>✔️ Cách xử lý đúng chuẩn</h4>
+            <p>Nếu khách quen hoặc chủ shop liên hệ nhờ bạn chạy đơn riêng ngoài app: <b>Shipper liên hệ Tổng đài gửi thông tin đơn để Tổng đài tạo đơn trên hệ thống và bắn lại cho chính mình chạy</b> (vừa có doanh thu vừa được công ty bảo hiểm đơn hàng hợp lệ).</p>
           </div>
           <div class="rule-card dont">
             <h4>❌ Chế tài vi phạm</h4>
-            <p>Tuyệt đối không nhận đơn riêng. Phát hiện vi phạm:</p>
+            <p>Tuyệt đối không tự ý nhận chạy chui không báo qua Tổng đài để lấy trọn tiền ship. Phát hiện vi phạm:</p>
             <p><span class="rule-tag red">Ngưng hợp tác vĩnh viễn ngay lập tức</span></p>
           </div>
         </div>` },
@@ -1242,4 +1242,287 @@ const PAGES = [
           </div>
         </div>` }
     ] }
+];
+
+// Bộ đề kiểm tra sát hạch kiến thức dành cho Shipper Mới (22 câu trắc nghiệm bám sát 8 mục)
+const EXAM_QUESTIONS = [
+  // MỤC 1: CHÍNH SÁCH & CHIẾT KHẤU
+  {
+    id: 1,
+    category: 'Mục 1: Chính sách & Chiết khấu',
+    question: 'Quy trình chuẩn để nhận lại đủ 100% tiền ký quỹ (500.000đ) khi nghỉ việc là gì?',
+    options: [
+      'A. Nhắn tin xin nghỉ trước 1 ngày và nộp tiền chiết khấu.',
+      'B. Báo trước 1 tuần cho Quản lý, chạy trọn vẹn tuần tiếp theo theo bảng ca đã đăng ký và nộp đủ chiết khấu tuần cuối.',
+      'C. Nghỉ việc bất kỳ lúc nào cũng được hoàn trả cọc ngay.'
+    ],
+    answer: 1,
+    explanation: 'Shipper cần báo trước 1 tuần, chạy trọn vẹn tuần tiếp theo theo bảng ca đã đăng ký và nộp đủ hóa đơn chiết khấu tuần cuối để được hoàn 100% ký quỹ.'
+  },
+  {
+    id: 2,
+    category: 'Mục 1: Chính sách & Chiết khấu',
+    question: '"Giờ chạy thực tế" trong tuần dùng để xét bậc % nộp về công ty được tính thế nào?',
+    options: [
+      'A. Là tổng số giờ bạn đăng ký trên app.',
+      'B. Là tổng giờ chạy trong tuần sau khi đã trừ đi các ca bị xóa do vi phạm quy định (như vào trễ quá 5p, ngoài nội ô quá 15p...).',
+      'C. Là số giờ bạn ngồi bật app đợi đơn.'
+    ],
+    answer: 1,
+    explanation: 'Giờ chạy thực tế = tổng giờ trong tuần trừ đi các ca bị xóa do vi phạm quy định.'
+  },
+  {
+    id: 3,
+    category: 'Mục 1: Chính sách & Chiết khấu',
+    question: 'Hạn chót thanh toán % chiết khấu tuần về công ty là lúc nào?',
+    options: [
+      'A. Trước 24h00 Chủ nhật.',
+      'B. Trước 22h00 tối Thứ 2 (sau 22h00 phạt 20.000đ; từ Thứ 3 trở đi phạt 50.000đ/ngày trễ).',
+      'C. Lúc nào nộp cũng được trong tháng.'
+    ],
+    answer: 1,
+    explanation: 'Bảng chiết khấu gửi chiều Thứ 2, hạn chót thanh toán trước 22h00 tối Thứ 2.'
+  },
+
+  // MỤC 2: QUY ĐỊNH & NỘI QUY
+  {
+    id: 4,
+    category: 'Mục 2: Quy định & Nội quy',
+    question: 'Khi bắt đầu ca, shipper bắt buộc phải thả vị trí ở đâu và nếu ở ngoài nội ô thì bị xử lý ra sao?',
+    options: [
+      'A. Thả vị trí ở đâu cũng được, miễn trong Cần Thơ.',
+      'B. Bắt buộc thả vị trí trong nội ô; nếu ở ngoài nội ô quá 15 phút không di chuyển vào thì sẽ bị Bot tự động kick khỏi ca.',
+      'C. Thả vị trí ở nhà rồi đợi đơn nổ mới chạy vào.'
+    ],
+    answer: 1,
+    explanation: 'Bắt buộc thả vị trí nội ô khi vào ca; ở ngoài nội ô quá 15 phút bot sẽ tự động kick khỏi ca.'
+  },
+  {
+    id: 5,
+    category: 'Mục 2: Quy định & Nội quy',
+    question: 'Bạn được phép vào ca trễ tối đa bao nhiêu phút trước khi hệ thống tự động khóa số ca?',
+    options: [
+      'A. Thoải mái, trễ 30 phút vẫn được tính ca.',
+      'B. Tối đa 5 phút. Nếu trễ hơn phải chủ động chụp ảnh Timestamp vị trí hiện tại kèm cú pháp /vaoca [vị_trí] [tiền] tag Tổng đài duyệt trước 15 phút.',
+      'C. Không cần xin phép, cứ chạy đủ giờ là được.'
+    ],
+    answer: 1,
+    explanation: 'Trễ tối đa 5 phút; nếu trễ 5-15p phải chụp ảnh Timestamp và cú pháp xin duyệt; quá 15p ca bị hủy.'
+  },
+  {
+    id: 6,
+    category: 'Mục 2: Quy định & Nội quy',
+    question: 'Quy định chuẩn về việc mặc đồng phục và chở người khi chạy ca Citiship là gì?',
+    options: [
+      'A. Mặc áo khoác nào cũng được, được chở bạn bè chạy cùng cho vui.',
+      'B. Bắt buộc mặc áo Citiship, nón Citiship, quần dài suốt ca; tuyệt đối KHÔNG chở bạn bè/người thân khi đang trong ca làm việc.',
+      'C. Chỉ cần mặc áo Citiship lúc chụp ảnh vào ca, sau đó cởi ra được.'
+    ],
+    answer: 1,
+    explanation: 'Đồng phục bắt buộc suốt ca, quần dài, mang giày/dép có quai hậu và tuyệt đối không chở người khi đang chạy ca.'
+  },
+
+  // MỤC 3: TRUNG THỰC & THÁI ĐỘ
+  {
+    id: 7,
+    category: 'Mục 3: Trung thực & Thái độ',
+    question: 'Nếu chủ shop hoặc khách quen liên hệ nhờ bạn chạy đơn riêng ngoài app, bạn xử lý thế nào cho đúng quy định?',
+    options: [
+      'A. Tự nhận chạy luôn để ăn trọn tiền ship không qua hệ thống.',
+      'B. Gửi thông tin đơn về cho Tổng đài để Tổng đài tạo đơn trên hệ thống và bắn lại đơn đó cho chính mình chạy.',
+      'C. Từ chối thẳng và không hỗ trợ khách.'
+    ],
+    answer: 1,
+    explanation: 'Gửi thông tin về cho Tổng đài tạo đơn trên hệ thống và bắn lại cho chính mình chạy để hợp lệ và được bảo hiểm đơn hàng.'
+  },
+  {
+    id: 8,
+    category: 'Mục 3: Trung thực & Thái độ',
+    question: 'Đơn ship 16.000đ hoặc 18.000đ khách đưa tờ 20.000đ, shipper phải làm gì?',
+    options: [
+      'A. Tự ý bỏ túi 2.000đ - 4.000đ coi như tiền tip mặc định.',
+      'B. Luôn chủ động thối đủ tiền thừa cho khách; chỉ nhận khi khách chủ động nói cho/tip.',
+      'C. Báo khách không có tiền thối để khách tự cho.'
+    ],
+    answer: 1,
+    explanation: 'Luôn chủ động thối tiền thừa cho khách, không tự ý làm tròn tiền tip.'
+  },
+  {
+    id: 9,
+    category: 'Mục 3: Trung thực & Thái độ',
+    question: 'Nếu bạn đứng đợi đơn tại 1 vị trí quá 15 - 20 phút mà không có đơn, bạn phải làm gì?',
+    options: [
+      'A. Tiếp tục đứng yên đó bấm điện thoại đến hết ca để ăn trọn giờ.',
+      'B. Chủ động di chuyển vào khu vực trung tâm hoặc các điểm nóng để đón đơn, dựt box chung (nghiêm cấm đứng xa treo giờ).',
+      'C. Tự ý tắt mạng đi uống cà phê.'
+    ],
+    answer: 1,
+    explanation: 'Đợi quá 15-20p không có đơn phải chủ động di chuyển vào trung tâm đón đơn hoặc dựt box chung, nghiêm cấm đứng xa treo giờ.'
+  },
+
+  // MỤC 4: QUY TRÌNH XỬ LÝ ĐƠN
+  {
+    id: 10,
+    category: 'Mục 4: Quy trình xử lý đơn',
+    question: 'Đối với Đơn mua hộ thức ăn/uống, việc bắt buộc phải làm TRƯỚC KHI BỎ TIỀN MUA là gì?',
+    options: [
+      'A. Mua luôn cho nhanh rồi mang tới gọi khách sau.',
+      'B. Bắt buộc gọi khách xác nhận chi tiết món ăn (số lượng, ghi chú, giá tiền) và địa chỉ nhận hàng (nếu không gọi trước, rủi ro tự chịu 100%).',
+      'C. Nhắn tin qua Zalo đợi khách trả lời rồi mới mua.'
+    ],
+    answer: 1,
+    explanation: 'Bắt buộc gọi khách chốt món ăn & địa chỉ trước khi mua. Không gọi trước sẽ không được công ty hỗ trợ bồi hoàn nếu bị boom hàng.'
+  },
+  {
+    id: 11,
+    category: 'Mục 4: Quy trình xử lý đơn',
+    question: 'Với đơn nhận hàng từ shop mang giao cho khách, bắt buộc phải gọi khách vào những thời điểm nào?',
+    options: [
+      'A. Chỉ gọi 1 lần khi đã đứng trước cửa nhà khách.',
+      'B. Gọi lần 1 ngay khi nhận đơn tại shop để hẹn giờ giao; gọi lần 2 khi đã đến nơi giao hàng.',
+      'C. Không cần gọi nếu đơn có ghi chú rõ địa chỉ.'
+    ],
+    answer: 1,
+    explanation: 'Gọi lần 1 lúc lấy hàng ở shop để xác nhận thời gian giao; gọi lần 2 khi đến điểm giao hàng.'
+  },
+  {
+    id: 12,
+    category: 'Mục 4: Quy trình xử lý đơn',
+    question: 'Tình huống nào dưới đây là LỪA ĐẢO 100% mà shipper tuyệt đối KHÔNG ĐƯỢC làm theo?',
+    options: [
+      'A. Khách yêu cầu giao tận tay người nhận.',
+      'B. Đơn yêu cầu ứng tiền mặt rồi gửi vào tài khoản ngân hàng / nạp ví Momo / mua mã thẻ cào điện thoại.',
+      'C. Đơn ứng tiền mua trà sữa tại quán có hóa đơn.'
+    ],
+    answer: 1,
+    explanation: 'Tuyệt đối không bao giờ nhận đơn yêu cầu ứng tiền mặt để chuyển khoản, nạp ví điện tử hay nạp thẻ cào.'
+  },
+  {
+    id: 13,
+    category: 'Mục 4: Quy trình xử lý đơn',
+    question: 'Đến điểm lấy hàng, nếu shop/quán nhờ bạn giao thêm 1 đơn phát sinh ngoài app, bạn xử lý thế nào?',
+    options: [
+      'A. Nhận cầm đi luôn rồi tự thu tiền của khách.',
+      'B. Báo ngay về Tổng đài kiểm tra xem đã có tài xế khác nhận đơn chưa trước khi lấy (tránh lấy mất đơn của đồng đội).',
+      'C. Cầm đơn đi giao rồi nhắn tổng đài sau khi giao xong.'
+    ],
+    answer: 1,
+    explanation: 'Báo ngay Tổng đài kiểm tra xem có tài xế khác nhận chưa trước khi cầm đơn đi.'
+  },
+
+  // MỤC 5: HƯỚNG DẪN THAO TÁC APP
+  {
+    id: 14,
+    category: 'Mục 5: Hướng dẫn thao tác app',
+    question: 'Khi hệ thống phân bổ đơn tới máy hoặc vừa dựt đơn box chung, bạn phải bấm nút "NHẬN ĐƠN" trong bao lâu?',
+    options: [
+      'A. Lúc nào bấm cũng được, miễn trong ca.',
+      'B. Phải bấm trong vòng 5 - 7 phút; quá thời gian này hệ thống tự động back đơn điều phối người khác và không giải quyết lại.',
+      'C. Đợi 15 phút sau bấm nhận vẫn được.'
+    ],
+    answer: 1,
+    explanation: 'Phải bấm Nhận đơn trong 5-7 phút, quá thời gian này bot sẽ tự động back đơn điều phối người khác.'
+  },
+  {
+    id: 15,
+    category: 'Mục 5: Hướng dẫn thao tác app',
+    question: 'Quy trình chuẩn khi lấy đơn trên Box Chung là gì?',
+    options: [
+      'A. Vào box thấy đơn nào ngon thì lấy, đơn xa bỏ qua.',
+      'B. Đơn hiển thị trên box chung nếu sau 20 giây chưa có ai nhận thì nhắn tin xin Tổng đài hỗ trợ bắn đơn trực tiếp; tuyệt đối không lựa đơn.',
+      'C. Dùng phần mềm can thiệp tự động bắt đơn.'
+    ],
+    answer: 1,
+    explanation: 'Sau 20s trên box chung nếu đơn còn thì nhắn xin TĐV bắn trực tiếp; nghiêm cấm lựa chọn đơn né đơn.'
+  },
+  {
+    id: 16,
+    category: 'Mục 5: Hướng dẫn thao tác app',
+    question: 'Trách nhiệm kiểm tra tin nhắn của shipper trong ca làm việc là gì?',
+    options: [
+      'A. Khi nào rảnh mới mở tin nhắn xem.',
+      'B. Thường xuyên kiểm tra mục Chat/Tin nhắn trên hệ thống để nhận lệnh điều phối khẩn từ Tổng đài viên.',
+      'C. Chỉ cần nghe điện thoại, không cần đọc tin nhắn app.'
+    ],
+    answer: 1,
+    explanation: 'Bắt buộc thường xuyên kiểm tra mục Chat/Tin nhắn trên hệ thống để nắm kịp thời thông tin điều phối.'
+  },
+
+  // MỤC 6: TÀI KHOẢN (ĐĂNG KÝ CA & CÔNG NỢ)
+  {
+    id: 17,
+    category: 'Mục 6: Tài khoản',
+    question: 'Hạn chót đăng ký ca tuần tới là khi nào và yêu cầu tối thiểu là bao nhiêu giờ?',
+    options: [
+      'A. Đăng ký vào sáng Thứ 2; tối thiểu 10 giờ.',
+      'B. Trước 23h00 tối Thứ 6 hàng tuần; tối thiểu 35 giờ/tuần (và bắt buộc có ít nhất 1 ca Thứ 7 hoặc Chủ nhật).',
+      'C. Tự do, thích chạy ngày nào thì đăng ký ngày đó.'
+    ],
+    answer: 1,
+    explanation: 'Hạn chót 23h00 Thứ 6; tối thiểu 35h/tuần và phải có ít nhất 1 ca cuối tuần (T7 hoặc CN).'
+  },
+  {
+    id: 18,
+    category: 'Mục 6: Tài khoản',
+    question: 'Lệnh /congno được dùng trong trường hợp nào?',
+    options: [
+      'A. Dùng để xem số tiền cước khách còn nợ mình.',
+      'B. Dùng để tra cứu nhanh thông tin số tài khoản và cú pháp chuyển khoản nộp tiền chiết khấu về công ty vào Thứ 2.',
+      'C. Dùng để xin ứng trước tiền mặt.'
+    ],
+    answer: 1,
+    explanation: 'Lệnh /congno cung cấp STK công ty và cú pháp chuyển khoản để nộp chiết khấu tuần.'
+  },
+
+  // MỤC 7: BẢNG LỆNH HỆ THỐNG
+  {
+    id: 19,
+    category: 'Mục 7: Bảng lệnh',
+    question: 'Đơn hàng có mã CT01-120120#0005 phát sinh phí ship 25k, bạn gửi cú pháp nào đúng chuẩn?',
+    options: [
+      'A. /phi 0005 25k',
+      'B. /phi 5 25 (chỉ lấy số sau dấu #, bỏ số 0 thừa ở đầu, số tiền ghi 25).',
+      'C. Nhắn tin: "Tổng đài đổi phí 25k giúp em".'
+    ],
+    answer: 1,
+    explanation: 'Cú pháp chuẩn: /phi [mã_rút_gọn] [số_tiền_k] -> /phi 5 25.'
+  },
+  {
+    id: 20,
+    category: 'Mục 7: Bảng lệnh',
+    question: 'Khi hết giờ làm việc và đã hoàn tất hết mọi đơn hàng, lệnh shipper dùng để kết thúc ca là gì?',
+    options: [
+      'A. /out',
+      'B. /vt off (Lưu ý: /hetca là lệnh của riêng Tổng đài).',
+      'C. Tự ý tắt app không cần gõ lệnh.'
+    ],
+    answer: 1,
+    explanation: 'Lệnh kết thúc ca của shipper là /vt off. Lệnh /hetca dành riêng cho Tổng đài.'
+  },
+
+  // MỤC 8: HỖ TRỢ & XỬ LÝ SỰ CỐ
+  {
+    id: 21,
+    category: 'Mục 8: Hỗ trợ & Xử lý sự cố',
+    question: 'Đã gọi khách trước lúc ở shop nhưng giao đến nơi khách không nghe máy, sau khi báo shop và Tổng đài hỗ trợ không được thì quyền lợi của shipper là gì?',
+    options: [
+      'A. Shipper tự vứt hàng và chịu mất tiền ship.',
+      'B. Mang hàng trả về lại cho shop và VẪN ĐƯỢC NHẬN ĐỦ TIỀN SHIP từ shop.',
+      'C. Tự ý sử dụng hàng hóa của khách.'
+    ],
+    answer: 1,
+    explanation: 'Nếu làm đúng quy trình gọi trước, khi boom hàng shipper trả hàng về shop và vẫn được nhận đủ tiền ship.'
+  },
+  {
+    id: 22,
+    category: 'Mục 8: Hỗ trợ & Xử lý sự cố',
+    question: 'Khi xảy ra sự cố khách quan như App lỗi, GPS sai hoặc mất sóng mạng, công ty xử lý ra sao?',
+    options: [
+      'A. Tự động xóa giờ ca và phạt tiền ngay.',
+      'B. Không tự động phạt; công ty cho phép ghi nhận sự cố, ưu tiên an toàn và xem xét miễn phạt khi shipper có bằng chứng xác minh.',
+      'C. Bắt shipper tự chịu mọi chi phí.'
+    ],
+    answer: 1,
+    explanation: 'Công ty luôn minh bạch và công bằng: sự cố bất khả kháng có bằng chứng sẽ được xem xét hỗ trợ, không phạt oan.'
+  }
 ];

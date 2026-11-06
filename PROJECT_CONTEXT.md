@@ -147,3 +147,10 @@ Chỉ còn 2 mục chưa có nội dung thật: `lenh-telegram`, `ho-tro`.
   + Thêm "Ma trận xử lý vi phạm công bằng & Quy trình ra quyết định minh bạch" vào mục Khiếu nại.
   + Thêm lưu ý nội bộ chính thức ở chân trang: *"Tài liệu lưu hành nội bộ của Công ty Citiship. Mọi chính sách chiết khấu, quy trình đi đơn và chế tài xử lý vi phạm do Ban Điều hành Citiship phê duyệt và có hiệu lực thi hành đối với tất cả Đối tác tài xế."*
   + Làm rõ triệt để định nghĩa "Giờ chạy thực tế = tổng giờ trong tuần trừ đi các ca bị xóa do vi phạm quy định" trên toàn bộ các mục liên quan (Chính sách, Bảng % chiết khấu, Chế tài thiếu giờ, Quy định xóa giờ ca, Thống kê tuần).
+- 2026-11-06: Tích hợp hệ thống 3 Vai trò (Roles) & Module Kiểm tra Sát hạch Kiến thức dành cho Shipper Mới:
+  + **3 Vai trò đăng nhập:** `Tổng đài viên` (`tongdai`, xem tự do, không cần tick/thi), `Shipper đang chạy` (`shipper_cu`, xác nhận đọc 8 mục, miễn thi), `Shipper mới / Thử việc` (`shipper_moi`, bắt buộc đọc 8/8 mục rồi làm bài thi sát hạch).
+  + **Chuẩn hóa quy trình xử lý đơn riêng:** Cập nhật mục "Không nhận đơn riêng" tại `trung-thuc`: Nếu khách/shop quen liên hệ book riêng, shipper gửi thông tin về Tổng đài tạo đơn trên hệ thống và bắn lại cho chính mình chạy.
+  + **Bộ đề thi 22 câu trắc nghiệm thực tế (`EXAM_QUESTIONS`):** Bám sát 100% nội dung 8 mục quy trình Citiship, có giải thích đáp án cặn kẽ.
+  + **Phòng thi Sát hạch (Exam Mode - `#/exam`):** Mở khóa khi đọc đủ 8/8 mục; khóa topbar navigation trong lúc làm bài; kiểm tra đầy đủ 22 câu trước khi nộp; tiêu chuẩn ĐẠT ≥ 19/22 câu (≥ 85%).
+  + **Trang Kết quả thi (`#/exam-result`):** Chấm điểm tự động, báo Đậu/Rớt, đối chiếu đáp án chi tiết từng câu kèm lời giải thích; cho phép thi lại; tự động sync điểm số và trạng thái lên Supabase.
+  + **Nâng cấp Dashboard Quản trị (`#/admin`):** Thêm 2 thẻ KPI (Shipper Mới, Đã Đậu Sát Hạch), thêm 2 cột Vai trò & Điểm Sát hạch trong bảng dữ liệu, bổ sung bộ lọc nâng cao và đồng bộ xuất file Excel/CSV đầy đủ.
