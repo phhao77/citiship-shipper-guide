@@ -1075,7 +1075,7 @@ const PAGES = [
       { title: 'Bảng lệnh hệ thống', html: `
         <div class="note"><b>Lưu ý:</b> Bảng lệnh dưới đây áp dụng cho cả nhóm Telegram và mục <b>Chat</b> trên app Citiship.</div>
         <table>
-          <tr><th style="min-width: 170px;">Cú pháp lệnh</th><th>Ý nghĩa & Hướng dẫn sử dụng</th></tr>
+          <tr><th style="width: 32%; min-width: 105px;">Cú pháp lệnh</th><th>Ý nghĩa & Hướng dẫn sử dụng</th></tr>
           <tr>
             <td class="cmd-cell"><code>/vaoca [vị_trí] [số_tiền]</code></td>
             <td>Dành cho shipper bắt đầu ca làm việc (nhập vị trí và số tiền mặt hiện có).</td>
@@ -1244,7 +1244,7 @@ const PAGES = [
     ] }
 ];
 
-// Bộ đề kiểm tra sát hạch kiến thức dành cho Shipper Mới (22 câu trắc nghiệm bám sát 8 mục)
+// Bộ đề làm bài test kiến thức dành cho Shipper Mới (22 câu trắc nghiệm bám sát 8 mục)
 const EXAM_QUESTIONS = [
   {
     id: 1,

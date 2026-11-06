@@ -147,15 +147,17 @@ Chỉ còn 2 mục chưa có nội dung thật: `lenh-telegram`, `ho-tro`.
   + Thêm "Ma trận xử lý vi phạm công bằng & Quy trình ra quyết định minh bạch" vào mục Khiếu nại.
   + Thêm lưu ý nội bộ chính thức ở chân trang: *"Tài liệu lưu hành nội bộ của Công ty Citiship. Mọi chính sách chiết khấu, quy trình đi đơn và chế tài xử lý vi phạm do Ban Điều hành Citiship phê duyệt và có hiệu lực thi hành đối với tất cả Đối tác tài xế."*
   + Làm rõ triệt để định nghĩa "Giờ chạy thực tế = tổng giờ trong tuần trừ đi các ca bị xóa do vi phạm quy định" trên toàn bộ các mục liên quan (Chính sách, Bảng % chiết khấu, Chế tài thiếu giờ, Quy định xóa giờ ca, Thống kê tuần).
-- 2026-11-06: Tích hợp hệ thống 3 Vai trò (Roles) & Module Kiểm tra Sát hạch Kiến thức dành cho Shipper Mới:
-  + **3 Vai trò đăng nhập:** `Tổng đài viên` (`tongdai`, xem tự do, không cần tick/thi), `Shipper đang chạy` (`shipper_cu`, xác nhận đọc 8 mục, miễn thi), `Shipper mới / Thử việc` (`shipper_moi`, bắt buộc đọc 8/8 mục rồi làm bài thi sát hạch).
+- 2026-11-06: Tích hợp hệ thống 3 Vai trò (Roles) & Module Bài Test Kiến Thức dành cho Shipper Mới:
+  + **3 Vai trò đăng nhập:** `Tổng đài viên` (`tongdai`, xem tự do, không cần tick/thi), `Shipper đang chạy` (`shipper_cu`, xác nhận đọc 8 mục, miễn test), `Shipper mới / Thử việc` (`shipper_moi`, bắt buộc đọc 8/8 mục rồi làm bài test 22 câu).
   + **Chuẩn hóa quy trình xử lý đơn riêng:** Cập nhật mục "Không nhận đơn riêng" tại `trung-thuc`: Nếu khách/shop quen liên hệ book riêng, shipper gửi thông tin về Tổng đài tạo đơn trên hệ thống và bắn lại cho chính mình chạy.
-  + **Bộ đề thi 22 câu trắc nghiệm thực tế (`EXAM_QUESTIONS`):** Bám sát 100% nội dung 8 mục quy trình Citiship, có giải thích đáp án cặn kẽ (đã chuẩn hóa Câu 7 đơn book riêng, Câu 12 khách nhờ chuyển khoản trước báo tổng đài xác minh khách cũ/mới, Câu 17 hạn đăng ký T7 & CN tối thiểu 30 tiếng, Câu 18 đơn công nợ tuyệt đối không thu tiền khách; đã đảo ngẫu nhiên phân bố đáp án đúng đều khắp cả 3 phương án: 8 câu A, 7 câu B, 7 câu C chống đoán mò).
-  + **Phòng thi Sát hạch (Exam Mode - `#/exam`):** Mở khóa khi đọc đủ 8/8 mục; khóa topbar navigation trong lúc làm bài; kiểm tra đầy đủ 22 câu trước khi nộp; tiêu chuẩn ĐẠT ≥ 19/22 câu (≥ 85%).
-  + **Trang Kết quả thi (`#/exam-result`):** Chấm điểm tự động, báo Đậu/Rớt, đối chiếu đáp án chi tiết từng câu kèm lời giải thích; cho phép thi lại; tự động sync điểm số và trạng thái lên Supabase.
-  + **Nâng cấp Dashboard Quản trị (`#/admin`):** Thêm 2 thẻ KPI (Shipper Mới, Đã Đậu Sát Hạch), thêm 2 cột Vai trò & Điểm Sát hạch trong bảng dữ liệu, bổ sung bộ lọc nâng cao và đồng bộ xuất file Excel/CSV đầy đủ.
-  + **Tinh chỉnh giao diện & nhận diện thương hiệu:**
-    - Cập nhật logo chính thức dạng PNG trong suốt không nền (`images/citiship-logo.png`).
+  + **Bộ đề 22 câu trắc nghiệm thực tế (`EXAM_QUESTIONS`):** Bám sát 100% nội dung 8 mục quy trình Citiship, có giải thích đáp án cặn kẽ (đã chuẩn hóa Câu 7 đơn book riêng, Câu 12 khách nhờ chuyển khoản trước báo tổng đài xác minh khách cũ/mới, Câu 17 hạn đăng ký T7 & CN tối thiểu 30 tiếng, Câu 18 đơn công nợ tuyệt đối không thu tiền khách; đã đảo ngẫu nhiên phân bố đáp án đúng đều khắp cả 3 phương án: 8 câu A, 7 câu B, 7 câu C chống đoán mò).
+  + **Giao diện Làm bài test (Test Mode - `#/exam`):** Đổi từ "Phòng thi sát hạch" sang "Làm bài test / Bài test kiến thức"; mở khóa khi hoàn thành training 8/8 mục; khóa topbar navigation trong lúc làm bài; kiểm tra đầy đủ 22 câu trước khi nộp; tiêu chuẩn ĐẠT ≥ 19/22 câu (≥ 85%).
+  + **Trang Kết quả bài test (`#/exam-result`):** Chấm điểm tự động, báo Đậu/Rớt, đối chiếu đáp án chi tiết từng câu kèm lời giải thích; cho phép làm lại bài test; tự động sync điểm số và trạng thái lên Supabase.
+  + **Nâng cấp Dashboard Quản trị (`#/admin`):** Thêm 2 thẻ KPI (Shipper Mới, Đã Đậu Bài Test), thêm 2 cột Vai trò & Điểm Bài Test trong bảng dữ liệu, bổ sung bộ lọc nâng cao và đồng bộ xuất file Excel/CSV đầy đủ.
+  + **Khắc phục triệt để lỗi hiển thị trên điện thoại:**
+    - Cắt bỏ khoảng viền trong suốt thừa của file logo PNG, nâng độ sắc nét và kích thước thực tế lên 2.5 lần.
+    - Ẩn text `.brand-compact` trên mobile để tránh lặp chữ "CitiShip" cạnh logo, giúp thanh Topbar thoáng đãng, không bị chèn ép.
+    - Sửa lỗi Bảng lệnh hệ thống bị tràn viền (overflow): Thêm `overflow-x: auto;` vào `.content`, giảm padding mobile, cho phép `.cmd-cell` ngắt dòng linh hoạt và điều chỉnh min-width cột cú pháp.
+    - Sửa thanh tiến độ `.up-text` không bị co cụm chữ theo hàng dọc trên màn hình hẹp.
     - Đổi thông điệp thẻ: *"Lộ trình training shipper mới — Bạn cần training 8/8 mục để làm bài test 22 câu"*.
     - Bổ sung quyền hạn Ban Lãnh đạo vào chân trang: *"có thể được điều chỉnh, cập nhật linh hoạt theo quyết định của Ban Lãnh đạo Công ty để phù hợp với tình hình vận hành thực tế"*.
-    - Chống co cụm chữ thanh tiến độ `.up-text` trên màn hình hẹp (flex wrap & gap).

@@ -160,7 +160,7 @@ function showLoginModal() {
         <div class="form-group" id="phone-group">
           <label for="user-phone">Số điện thoại (dùng chạy app):</label>
           <input type="tel" id="user-phone" required placeholder="Ví dụ: 0912345678" pattern="[0-9]{9,11}" autocomplete="tel">
-          <small class="form-hint">Dùng để lưu tiến độ xác nhận đọc và bài kiểm tra sát hạch</small>
+          <small class="form-hint">Dùng để lưu tiến độ training và làm bài test</small>
         </div>
 
         <button type="submit" class="btn-submit" id="btn-save-user">Bắt đầu ngay</button>
@@ -275,7 +275,7 @@ async function confirmPage(pageId) {
 
   if (count === 8) {
     if (user.role === 'shipper_moi') {
-      statusText = user.exam_status === 'passed' ? `ĐẬU SÁT HẠCH (${user.exam_score}/22)` : 'Đã đọc 8/8 (Chờ thi)';
+      statusText = user.exam_status === 'passed' ? `ĐẬU TEST (${user.exam_score}/22)` : 'Đã training 8/8 (Chờ test)';
     } else {
       statusText = 'HOÀN THÀNH ✅';
     }
@@ -306,7 +306,7 @@ async function confirmPage(pageId) {
   }
 
   if (user.role === 'shipper_moi' && count === 8) {
-    alert('🎉 Chúc mừng bạn đã đọc và xác nhận đủ 8/8 mục nội quy!\nHệ thống sẽ mở khóa và chuyển bạn đến Bài Kiểm Tra Sát Hạch Kiến Thức (22 câu).');
+    alert('🎉 Chúc mừng bạn đã hoàn thành training 8/8 mục nội quy!\nHệ thống sẽ mở khóa và chuyển bạn đến Làm bài test kiến thức (22 câu).');
     location.hash = '#/exam';
   } else {
     alert('Đã ghi nhận bạn hiểu rõ quy định này! Cảm ơn bạn.');
@@ -372,8 +372,8 @@ async function renderAdmin() {
             <option value="reading">Đang đọc dở (< 8/8)</option>
             <option value="moi">🔰 Shipper Mới</option>
             <option value="cu">🚚 Shipper Đang chạy</option>
-            <option value="exam_pass">🏆 Đã Đậu Sát Hạch</option>
-            <option value="exam_pending">⚠️ Shipper Mới chưa đậu</option>
+            <option value="exam_pass">🏆 Đã Đậu Bài Test</option>
+            <option value="exam_pending">⚠️ Shipper Mới chưa test/rớt</option>
           </select>
         </div>
         <div class="admin-result-count" id="admin-result-count">Đang tải...</div>
@@ -452,7 +452,7 @@ function renderAdminStats(list) {
         <div class="stat-icon-wrap stat-purple">🏆</div>
         <div class="stat-content">
           <div class="stat-num">${examPassedCount}</div>
-          <div class="stat-lbl">Đã Đậu Sát Hạch</div>
+          <div class="stat-lbl">Đã Đậu Bài Test</div>
         </div>
       </div>
     </div>
@@ -531,7 +531,7 @@ function renderAdminTable(list) {
       ? `<span class="badge-role-moi">🔰 Shipper Mới</span>` 
       : `<span class="badge-role-cu">🚚 Đang chạy</span>`;
 
-    // Huy hiệu Điểm thi Sát hạch
+    // Huy hiệu Điểm Bài Test
     let examBadge = '';
     if (isMoi) {
       if (item.exam_score !== undefined && item.exam_score !== null) {
@@ -540,10 +540,10 @@ function renderAdminTable(list) {
           ? `<span class="badge-exam-pass" title="Đạt chuẩn (≥19/22)">ĐẬU (${item.exam_score}/22)</span>`
           : `<span class="badge-exam-fail" title="Chưa đạt chuẩn (<19/22)">RỚT (${item.exam_score}/22)</span>`;
       } else {
-        examBadge = `<span class="badge-exam-none">Chưa thi</span>`;
+        examBadge = `<span class="badge-exam-none">Chưa test</span>`;
       }
     } else {
-      examBadge = `<span class="badge-exam-na" title="Shipper cũ miễn thi">Miễn thi</span>`;
+      examBadge = `<span class="badge-exam-na" title="Shipper cũ miễn test">Miễn test</span>`;
     }
 
     return `
@@ -592,7 +592,7 @@ function renderAdminTable(list) {
           <th class="col-tick" title="7. Bảng lệnh">7. BL</th>
           <th class="col-tick" title="8. Hỗ trợ">8. HT</th>
           <th class="col-progress">Đã đọc</th>
-          <th class="col-exam">Sát hạch</th>
+          <th class="col-exam">Bài test</th>
           <th class="col-status">Trạng thái</th>
           <th class="col-time">Cập nhật</th>
         </tr>
@@ -633,17 +633,17 @@ function exportToCSV() {
   if (!cachedAdminList || cachedAdminList.length === 0) return alert('Không có dữ liệu để xuất!');
   
   let csv = '\uFEFF'; // BOM UTF-8 để Excel hiển thị đúng tiếng Việt
-  csv += 'STT,Họ và Tên,Số điện thoại,Vai trò,Chính sách,Quy định,Trung thực,Quy trình,Thao tác app,Tài khoản,Bảng lệnh,Hỗ trợ,Tiến độ đọc,Điểm sát hạch,Trạng thái tổng,Thời gian cập nhật\n';
+  csv += 'STT,Họ và Tên,Số điện thoại,Vai trò,Chính sách,Quy định,Trung thực,Quy trình,Thao tác app,Tài khoản,Bảng lệnh,Hỗ trợ,Tiến độ đọc,Điểm bài test,Trạng thái tổng,Thời gian cập nhật\n';
 
   cachedAdminList.forEach((item, idx) => {
     const t = (val) => val ? 'Đã hiểu' : 'Chưa';
     const roleTxt = item.role === 'shipper_moi' ? 'Shipper Mới' : 'Shipper Đang chạy';
-    let examTxt = 'Miễn thi';
+    let examTxt = 'Miễn test';
     if (item.role === 'shipper_moi') {
       if (item.exam_score !== undefined && item.exam_score !== null) {
         examTxt = `${item.exam_score}/22 (${item.exam_status === 'passed' || item.exam_score >= 19 ? 'ĐẬU' : 'RỚT'})`;
       } else {
-        examTxt = 'Chưa thi';
+        examTxt = 'Chưa test';
       }
     }
 
@@ -747,11 +747,11 @@ function renderHome() {
           <div class="new-shipper-card passed">
             <div class="nsc-icon">🏆</div>
             <div class="nsc-content">
-              <h4>Chúc mừng! Bạn đã ĐẠT bài thi sát hạch Citiship!</h4>
-              <p>Điểm số sát hạch: <b>${user.exam_score} / 22 câu (Đạt chuẩn ≥ 19/22)</b>. Dữ liệu đã được lưu trên hệ thống để cấp phép vào ca hoạt động.</p>
+              <h4>Chúc mừng! Bạn đã ĐẠT bài test Citiship!</h4>
+              <p>Điểm số bài test: <b>${user.exam_score} / 22 câu (Đạt chuẩn ≥ 19/22)</b>. Dữ liệu đã được lưu trên hệ thống để cấp phép vào ca hoạt động.</p>
               <div class="nsc-actions">
-                <a href="#/exam-result" class="btn-exam-outline">📄 Xem lại kết quả thi</a>
-                <a href="#/exam" class="btn-exam-outline">🔄 Làm lại bài thi</a>
+                <a href="#/exam-result" class="btn-exam-outline">📄 Xem lại kết quả test</a>
+                <a href="#/exam" class="btn-exam-outline">🔄 Làm lại bài test</a>
               </div>
             </div>
           </div>
@@ -763,7 +763,7 @@ function renderHome() {
             <div class="nsc-icon">🎉</div>
             <div class="nsc-content">
               <h4>Đã hoàn thành training 8/8 mục!</h4>
-              <p>Vui lòng hoàn thành <b>Bài test sát hạch kiến thức (22 câu)</b> để kiểm tra mức độ hiểu quy trình.</p>
+              <p>Vui lòng hoàn thành <b>Bài test kiến thức (22 câu)</b> để kiểm tra mức độ hiểu quy trình.</p>
               ${hasTaken ? `<p class="exam-prev-score">Điểm lần trước: <span class="score-fail">${user.exam_score} / 22 câu (Chưa đạt)</span>. Yêu cầu: Đúng ≥ 19/22 câu.</p>` : ''}
               <a href="#/exam" class="btn-start-exam">✍️ BẮT ĐẦU LÀM BÀI TEST NGAY (22 CÂU) →</a>
             </div>
@@ -828,10 +828,10 @@ function renderHome() {
     </footer>`;
 }
 
-// State lưu câu trả lời bài thi tạm thời
+// State lưu câu trả lời bài test tạm thời
 let currentExamAnswers = {};
 
-// Giao diện Phòng thi Sát hạch (#/exam)
+// Giao diện Làm bài test (#/exam)
 function renderExam() {
   const user = getUser();
   if (!user) {
@@ -839,7 +839,7 @@ function renderExam() {
     return;
   }
 
-  document.title = 'Phòng thi Sát hạch Kiến thức - Citiship';
+  document.title = 'Làm bài test kiến thức - Citiship';
   const confirmed = getLocalConfirmed();
   const confirmedCount = Object.keys(confirmed).length;
 
@@ -863,7 +863,7 @@ function renderExam() {
     return;
   }
 
-  // Khóa phòng thi: ẩn topbar navigation
+  // Khóa giao diện làm bài test: ẩn topbar navigation
   document.body.classList.add('in-exam-mode');
 
   // Khôi phục câu trả lời cũ nếu có
@@ -902,7 +902,7 @@ function renderExam() {
     <div class="exam-page-container">
       <div class="exam-topbar">
         <div class="exam-brand-row">
-          <span class="exam-badge-tag">🔒 PHÒNG THI SÁT HẠCH</span>
+          <span class="exam-badge-tag">🔒 LÀM BÀI TEST</span>
           <span class="exam-user-tag">Tài xế: <b>${user.name}</b> (${user.phone})</span>
         </div>
         <div class="exam-counter-pill">
@@ -912,8 +912,8 @@ function renderExam() {
       </div>
 
       <div class="exam-intro-card">
-        <h2>📝 BÀI KIỂM TRA SÁT HẠCH KIẾN THỨC SHIPPER MỚI</h2>
-        <p>Đề thi gồm <b>22 câu hỏi tình huống thực tế</b> bám sát 8 mục quy trình hoạt động của Citiship.</p>
+        <h2>📝 BÀI TEST KIẾN THỨC SHIPPER MỚI (22 CÂU)</h2>
+        <p>Đề gồm <b>22 câu hỏi tình huống thực tế</b> bám sát 8 mục quy trình hoạt động của Citiship.</p>
         <div class="exam-rules-note">
           <div class="ern-item">🚫 <b>Chế độ làm bài:</b> Không rời khỏi trang này trong lúc làm bài.</div>
           <div class="ern-item">🎯 <b>Tiêu chuẩn ĐẠT:</b> Đúng từ <b>19 / 22 câu</b> trở lên (≥ 85%).</div>
@@ -930,7 +930,7 @@ function renderExam() {
             Vui lòng kiểm tra kỹ tất cả các câu trước khi bấm nộp bài.
           </div>
           <button type="submit" class="btn-submit-exam" id="btn-submit-exam">
-            NỘP BÀI THI KIỂM TRA 🚀
+            NỘP BÀI TEST 🚀
           </button>
         </div>
       </form>
@@ -984,7 +984,7 @@ async function handleExamSubmit(e) {
     return;
   }
 
-  if (!confirm('Bạn đã trả lời đầy đủ 22 câu. Bạn có chắc chắn muốn nộp bài thi ngay không?')) {
+  if (!confirm('Bạn đã trả lời đầy đủ 22 câu. Bạn có chắc chắn muốn nộp bài test ngay không?')) {
     return;
   }
 
@@ -1012,7 +1012,7 @@ async function handleExamSubmit(e) {
   // Đồng bộ kết quả lên Supabase
   if (supabaseClient && user.phone) {
     try {
-      const statusText = isPassed ? `ĐẬU SÁT HẠCH (${correctCount}/22)` : `RỚT SÁT HẠCH (${correctCount}/22)`;
+      const statusText = isPassed ? `ĐẬU TEST (${correctCount}/22)` : `RỚT TEST (${correctCount}/22)`;
       await supabaseClient.from('shipper_confirmations').upsert({
         phone: user.phone,
         name: user.name,
@@ -1024,7 +1024,7 @@ async function handleExamSubmit(e) {
         updated_at: new Date().toISOString()
       }, { onConflict: 'phone' });
     } catch (err) {
-      console.warn('Lỗi lưu kết quả thi lên Supabase:', err);
+      console.warn('Lỗi lưu kết quả test lên Supabase:', err);
     }
   }
 
@@ -1040,7 +1040,7 @@ function renderExamResult() {
   }
 
   document.body.classList.remove('in-exam-mode');
-  document.title = 'Kết quả thi Sát hạch - Citiship';
+  document.title = 'Kết quả bài test - Citiship';
 
   const score = user.exam_score || 0;
   const isPassed = user.exam_status === 'passed' || score >= 19;
@@ -1085,7 +1085,7 @@ function renderExamResult() {
     <div class="exam-result-container">
       <div class="result-hero-card ${isPassed ? 'hero-pass' : 'hero-fail'}">
         <div class="result-hero-icon">${isPassed ? '🏆' : '⚠️'}</div>
-        <h1>${isPassed ? 'XUẤT SẮC! BẠN ĐÃ ĐẠT BÀI THI SÁT HẠCH' : 'BẠN CHƯA ĐẠT TIÊU CHUẨN SÁT HẠCH'}</h1>
+        <h1>${isPassed ? 'XUẤT SẮC! BẠN ĐÃ ĐẠT BÀI TEST' : 'BẠN CHƯA ĐẠT TIÊU CHUẨN BÀI TEST'}</h1>
         <div class="result-score-circle">
           <div class="score-big">${score}<span>/22</span></div>
           <div class="score-sub">Tỷ lệ chính xác: ${percent}%</div>
@@ -1093,11 +1093,11 @@ function renderExamResult() {
         <p class="result-desc">
           ${isPassed 
             ? 'Chúc mừng bạn đã hoàn thành xuất sắc bài kiểm tra kiến thức Citiship. Kết quả đã được ghi nhận trên hệ thống Quản trị để cấp phép chính thức vào ca!' 
-            : 'Tiêu chuẩn đạt yêu cầu là đúng từ <b>19 / 22 câu</b> (≥ 85%). Vui lòng xem kỹ phần giải thích đáp án sai bên dưới và bấm nút <b>Thi lại</b> để hoàn tất sát hạch nhé!'}
+            : 'Tiêu chuẩn đạt yêu cầu là đúng từ <b>19 / 22 câu</b> (≥ 85%). Vui lòng xem kỹ phần giải thích đáp án sai bên dưới và bấm nút <b>Làm lại bài test</b> để hoàn tất nhé!'}
         </p>
         <div class="result-actions">
           <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
-          <a href="#/exam" class="btn-result-retake">${isPassed ? '🔄 Làm lại bài thi' : '⚡ Thi lại ngay'}</a>
+          <a href="#/exam" class="btn-result-retake">${isPassed ? '🔄 Làm lại bài test' : '⚡ Làm lại test'}</a>
         </div>
       </div>
 
@@ -1109,7 +1109,7 @@ function renderExamResult() {
         </div>
         <div class="review-bottom-nav">
           <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
-          <a href="#/exam" class="btn-result-retake">⚡ Làm lại bài thi</a>
+          <a href="#/exam" class="btn-result-retake">⚡ Làm lại bài test</a>
         </div>
       </div>
     </div>
@@ -1202,19 +1202,19 @@ function route() {
     return;
   }
 
-  // Tuyến đường Phòng thi Sát hạch
+  // Tuyến đường Làm bài test
   if (hash === 'exam') {
     renderExam();
     return;
   }
 
-  // Tuyến đường Kết quả thi
+  // Tuyến đường Kết quả bài test
   if (hash === 'exam-result') {
     renderExamResult();
     return;
   }
 
-  // Rời khỏi phòng thi thì bỏ class khóa
+  // Rời khỏi trang làm bài test thì bỏ class khóa
   document.body.classList.remove('in-exam-mode');
 
   const user = getUser();
