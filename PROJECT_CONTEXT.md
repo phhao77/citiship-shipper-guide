@@ -146,3 +146,4 @@ Chỉ còn 2 mục chưa có nội dung thật: `lenh-telegram`, `ho-tro`.
   + Thêm Checklist trước khi vào ca và cơ chế xử lý khi mất mạng/lỗi GPS vào mục Hướng dẫn app.
   + Thêm "Ma trận xử lý vi phạm công bằng & Quy trình ra quyết định minh bạch" vào mục Khiếu nại.
   + Thêm lưu ý nội bộ chính thức ở chân trang: *"Tài liệu lưu hành nội bộ của Công ty Citiship. Mọi chính sách chiết khấu, quy trình đi đơn và chế tài xử lý vi phạm do Ban Điều hành Citiship phê duyệt và có hiệu lực thi hành đối với tất cả Đối tác tài xế."*
+  + Làm rõ triệt để định nghĩa "Giờ chạy thực tế = tổng giờ trong tuần trừ đi các ca bị xóa do vi phạm quy định" trên toàn bộ các mục liên quan (Chính sách, Bảng % chiết khấu, Chế tài thiếu giờ, Quy định xóa giờ ca, Thống kê tuần).

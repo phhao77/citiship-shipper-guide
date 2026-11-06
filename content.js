@@ -41,7 +41,7 @@ const PAGES = [
           <div class="rule-card do">
             <h4>⚡ Từ tuần thứ 2 (Chính thức)</h4>
             <ul>
-              <li>Chiết khấu tính lũy tiến theo <b>tổng số giờ chạy trong tuần</b> (chạy càng nhiều % nộp càng giảm).</li>
+              <li>Chiết khấu tính lũy tiến theo <b>GIỜ CHẠY THỰC TẾ</b> trong tuần (tổng giờ sau khi đã trừ các ca bị xóa do vi phạm quy định — giờ càng cao % nộp càng giảm).</li>
               <li>Bắt buộc đăng ký tối thiểu: <span class="rule-tag green">30 giờ / tuần</span>.</li>
               <li>Hạn đăng ký: <b>Thứ 7 & Chủ Nhật</b> (hệ thống đóng lúc <b>00:00 Thứ 2</b>).</li>
             </ul>
@@ -52,11 +52,12 @@ const PAGES = [
         <div class="quick-summary">📈 Chạy càng nhiều giờ — % nộp về công ty càng thấp (thu nhập càng cao).</div>
         <p>Áp dụng từ 04/01/2021. Chạy đủ mốc giờ nào thì áp dụng thang % nộp tương ứng cho tuần đó:</p>
         <div class="note">
-          ⚠️ <b>LƯU Ý QUAN TRỌNG VỀ GIỜ CHẠY:</b><br>
-          Mốc giờ xét duyệt là <b>Giờ chạy thực tế</b> (được tính sau khi đã trừ/xóa các ca vi phạm quy định như: vào trễ quá 5p, ra khỏi nội ô 15p, không thả định vị hoặc ca không có đơn).
+          ⚠️ <b>ĐỊNH NGHĨA GIỜ CHẠY THỰC TẾ ĐỂ TÍNH % CHIẾT KHẤU:</b><br>
+          <b>Giờ chạy thực tế = Tổng giờ chạy trong tuần TRỪ ĐI các ca đã bị xóa do vi phạm quy định</b> (như: vào trễ quá 5p, ra khỏi nội ô quá 15p, không bật/thả định vị, ca không hoàn thành đơn nào...).<br>
+          👉 <i>Nghĩa là giờ thực tế sẽ trừ mấy ca đã bị xóa khi vi phạm — ca nào bị xóa thì mất trọn số giờ của ca đó, không được tính vào tổng giờ tuần để xét bậc chiết khấu!</i>
         </div>
         <table>
-          <tr><th>Mốc giờ chạy / tuần</th><th>% Nộp về công ty</th><th>Thu nhập giữ lại</th></tr>
+          <tr><th>Mốc GIỜ CHẠY THỰC TẾ / tuần</th><th>% Nộp về công ty</th><th>Thu nhập giữ lại</th></tr>
           <tr><td>30 giờ (Mức tối thiểu)</td><td>24%</td><td>76%</td></tr>
           <tr><td>35 giờ</td><td>23%</td><td>77%</td></tr>
           <tr><td>40 giờ</td><td>22%</td><td>78%</td></tr>
@@ -132,6 +133,7 @@ const PAGES = [
           </div>
           <div class="rule-card dont">
             <h4>❌ Chạy thiếu giờ so với đã đăng ký</h4>
+            <p>Hệ thống so sánh <b>Giờ chạy thực tế</b> (đã trừ các ca bị xóa do vi phạm) với số giờ bạn đã đăng ký:</p>
             <ul>
               <li>Thiếu dưới 10%: <span class="rule-tag red">Phạt 1%</span></li>
               <li>Thiếu dưới 20%: <span class="rule-tag red">Phạt 2%</span></li>
@@ -458,7 +460,7 @@ const PAGES = [
         </figure>` },
 
       { title: 'Điều kiện ca làm hợp lệ & Xóa giờ chạy', html: `
-        <div class="quick-summary">⚠️ Ca làm sẽ bị HỦY / XÓA GIỜ nếu vi phạm các điều kiện sau:</div>
+        <div class="quick-summary">⚠️ Ca làm sẽ bị HỦY / XÓA GIỜ nếu vi phạm — Số giờ ca bị xóa sẽ KHÔNG được tính vào Giờ chạy thực tế tuần!</div>
         <div class="rule-card dont">
           <h4>❌ 3 lý do bị xóa giờ ca làm ngay:</h4>
           <ol>
@@ -467,7 +469,11 @@ const PAGES = [
             <li><b>Không thả vào trung tâm Quận Ninh Kiều</b> (trừ phường An Bình). Vào ca ngoài nội ô quá 15 phút không di chuyển vào nội ô sẽ bị Bot tự động kick khỏi ca.</li>
           </ol>
         </div>
-        <div class="note"><b>Mẹo:</b> Vào ca hãy chủ động di chuyển, đổi vị trí để bot bắn đơn hoặc nhận đơn box chung nhé!</div>` },
+        <div class="note">
+          ⚠️ <b>HẬU QUẢ KHI BỊ XÓA GIỜ CA:</b><br>
+          <b>Giờ chạy thực tế = Tổng giờ trong tuần TRỪ ĐI các ca đã bị xóa khi vi phạm</b>.<br>
+          Nếu bị xóa ca làm, tổng giờ thực tế của bạn sẽ bị tụt xuống, dẫn đến: <b>Bị tăng % chiết khấu phải nộp</b> hoặc <b>bị phạt thêm % vì thiếu giờ đăng ký tuần</b>!
+        </div>` },
 
       { title: 'Quy định đổi ca & Nhóm Telegram', html: `
         <div class="quick-summary">🔄 Quy định khi có việc bận cần đổi ca và 2 kênh thông tin chính thức.</div>
@@ -1006,7 +1012,9 @@ const PAGES = [
         </figure>
         <h3>Nội dung thống kê gồm có:</h3>
         <ul>
-          <li><b>Tổng kết cả tuần:</b> Tổng số đơn hoàn thành, đơn hủy, tổng giờ làm việc thực tế và tổng phí ship cả tuần.</li>
+          <li><b>Tổng kết cả tuần:</b> Tổng số đơn hoàn thành, đơn hủy, tổng phí ship cả tuần và <b>Tổng giờ làm việc thực tế</b>.
+            <br><small style="color:var(--accent); font-weight: 600;">⚠️ Lưu ý: Giờ thực tế dùng để tính bảng chiết khấu Thứ 2 là số giờ đã trừ đi các ca bị xóa do vi phạm quy định.</small>
+          </li>
           <li><b>Phân tích hiệu suất trung bình:</b> Đánh giá năng suất hoạt động của bạn trong suốt cả tuần.</li>
           <li><b>Tỷ lệ đơn không chụp hình:</b> Đếm số đơn thiếu ảnh bằng chứng để biết có bị trừ phạt <i>(mỗi 5% đơn không hình tương ứng phạt 1%)</i> hay không.</li>
           <li><b>Bảng chi tiết theo từng ngày chạy:</b> Xem cụ thể phí ship, đơn xong, đơn hủy, giờ làm chi tiết của từng ngày từ Thứ 2 đến Chủ nhật.</li>
