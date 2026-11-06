@@ -1388,14 +1388,14 @@ const EXAM_QUESTIONS = [
   {
     id: 12,
     category: 'Mục 4: Quy trình xử lý đơn',
-    question: 'Tình huống nào dưới đây là LỪA ĐẢO 100% mà shipper tuyệt đối KHÔNG ĐƯỢC làm theo?',
+    question: 'Nếu gặp đơn hàng khách nhờ shipper chuyển khoản qua trước rồi đến nơi khách đưa lại tiền mặt, shipper xử lý thế nào?',
     options: [
-      'A. Khách yêu cầu giao tận tay người nhận.',
-      'B. Đơn yêu cầu ứng tiền mặt rồi gửi vào tài khoản ngân hàng / nạp ví Momo / mua mã thẻ cào điện thoại.',
-      'C. Đơn ứng tiền mua trà sữa tại quán có hóa đơn.'
+      'A. Tự ý chuyển khoản ngay theo lời khách để đi đơn cho nhanh.',
+      'B. Phải báo lại với Tổng đài để kiểm tra xem khách cũ hay khách mới trước khi thực hiện.',
+      'C. Cứ nhận đơn rồi đến nơi mới tính tiếp.'
     ],
     answer: 1,
-    explanation: 'Tuyệt đối không bao giờ nhận đơn yêu cầu ứng tiền mặt để chuyển khoản, nạp ví điện tử hay nạp thẻ cào.'
+    explanation: 'Với đơn khách nhờ chuyển khoản trước rồi đến nơi đưa tiền mặt, bắt buộc phải báo lại Tổng đài để kiểm tra khách cũ hay khách mới nhằm đảm bảo an toàn tuyệt đối, tránh bị lừa đảo.'
   },
   {
     id: 13,
@@ -1452,26 +1452,26 @@ const EXAM_QUESTIONS = [
   {
     id: 17,
     category: 'Mục 6: Tài khoản',
-    question: 'Hạn chót đăng ký ca tuần tới là khi nào và yêu cầu tối thiểu là bao nhiêu giờ?',
+    question: 'Hạn đăng ký ca làm việc tuần tới là khi nào và yêu cầu tối thiểu là bao nhiêu tiếng/tuần?',
     options: [
-      'A. Đăng ký vào sáng Thứ 2; tối thiểu 10 giờ.',
-      'B. Trước 23h00 tối Thứ 6 hàng tuần; tối thiểu 35 giờ/tuần (và bắt buộc có ít nhất 1 ca Thứ 7 hoặc Chủ nhật).',
+      'A. Đăng ký vào sáng Thứ 2; tối thiểu 15 tiếng/tuần.',
+      'B. Thứ 7 & Chủ Nhật (hệ thống đóng lúc 00:00 Thứ 2); tối thiểu 30 tiếng/tuần.',
       'C. Tự do, thích chạy ngày nào thì đăng ký ngày đó.'
     ],
     answer: 1,
-    explanation: 'Hạn chót 23h00 Thứ 6; tối thiểu 35h/tuần và phải có ít nhất 1 ca cuối tuần (T7 hoặc CN).'
+    explanation: 'Hạn đăng ký ca: Thứ 7 & Chủ Nhật (hệ thống tự động đóng lúc 00:00 Thứ 2). Yêu cầu tối thiểu chạy 30 tiếng 1 tuần.'
   },
   {
     id: 18,
     category: 'Mục 6: Tài khoản',
-    question: 'Lệnh /congno được dùng trong trường hợp nào?',
+    question: 'Khi đi giao đơn hàng thuộc diện "Công nợ" (công ty nợ shipper), shipper xử lý việc thu tiền ship thế nào cho đúng?',
     options: [
-      'A. Dùng để xem số tiền cước khách còn nợ mình.',
-      'B. Dùng để tra cứu nhanh thông tin số tài khoản và cú pháp chuyển khoản nộp tiền chiết khấu về công ty vào Thứ 2.',
-      'C. Dùng để xin ứng trước tiền mặt.'
+      'A. Vẫn thu tiền ship của khách nhận hàng như bình thường.',
+      'B. Tuyệt đối KHÔNG thu tiền ship của khách; hoàn tất đơn và tạo yêu cầu công nợ trên app để công ty đối soát hoàn lại vào Thứ 2.',
+      'C. Bắt người nhận hàng chuyển khoản tiền ship riêng cho mình.'
     ],
     answer: 1,
-    explanation: 'Lệnh /congno cung cấp STK công ty và cú pháp chuyển khoản để nộp chiết khấu tuần.'
+    explanation: 'Đối với đơn công nợ, shipper tuyệt đối không thu tiền ship của khách. Sau khi giao xong tạo yêu cầu công nợ trên app để công ty đối soát hoàn lại vào Thứ 2.'
   },
 
   // MỤC 7: BẢNG LỆNH HỆ THỐNG
