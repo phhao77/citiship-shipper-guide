@@ -1059,29 +1059,30 @@ async function handleExamSubmit(e) {
   user.exam_completed_at = new Date().toISOString();
   setUser(user);
 
-  // Đồng bộ kết quả lên Supabase
+  // Đồng bộ kết quả lên Supabase ngầm (không chờ mạng tránh treo nút nộp bài)
   if (supabaseClient && user.phone) {
-    try {
-      const statusText = isPassed 
-        ? `ĐẬU TEST (${correctCount}/${totalQuestions})` 
-        : (failedRedCount > 0 ? `RỚT TEST (Sai ${failedRedCount} câu Đỏ)` : `RỚT TEST (${correctCount}/${totalQuestions})`);
-      await supabaseClient.from('shipper_confirmations').upsert({
-        phone: user.phone,
-        name: user.name,
-        role: user.role,
-        progress: '8/8',
-        status: statusText,
-        exam_score: correctCount,
-        exam_status: isPassed ? 'passed' : 'failed',
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'phone' });
-    } catch (err) {
-      console.warn('Lỗi lưu kết quả test lên Supabase:', err);
-    }
+    const statusText = isPassed 
+      ? `ĐẬU TEST (${correctCount}/${totalQuestions})` 
+      : (failedRedCount > 0 ? `RỚT TEST (Sai ${failedRedCount} câu Đỏ)` : `RỚT TEST (${correctCount}/${totalQuestions})`);
+    
+    supabaseClient.from('shipper_confirmations').upsert({
+      phone: user.phone,
+      name: user.name,
+      role: user.role,
+      progress: '8/8',
+      status: statusText,
+      exam_score: correctCount,
+      exam_status: isPassed ? 'passed' : 'failed',
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'phone' }).then(({ error }) => {
+      if (error) console.warn('Lỗi lưu kết quả Supabase:', error);
+    }).catch(err => console.warn('Lỗi kết nối Supabase:', err));
   }
 
+  // Chuyển ngay lập tức sang trang kết quả mượt mà 0ms
   document.body.classList.remove('in-exam-mode');
   location.hash = '#/exam-result';
+  renderExamResult();
 }
 
 function renderExamResult() {

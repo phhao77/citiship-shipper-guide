@@ -183,3 +183,7 @@ Chỉ còn 2 mục chưa có nội dung thật: `lenh-telegram`, `ho-tro`.
   + **Tối ưu hiển thị Mobile:**
     * Bảng "3 tầng trí nhớ" tự động chuyển thành dạng thẻ danh sách (Card layout) xếp dọc trên màn hình điện thoại dưới 640px, khắc phục triệt để lỗi ép bẹp chữ.
     * Co giãn linh hoạt thanh Topbar trên màn hình siêu nhỏ (375px), chống tràn nút "Đổi" và nút Quản trị.
+  + **Khắc phục lỗi nộp bài test & Chuẩn hóa câu lệnh:**
+    * Sửa câu 18: Lệnh kết thúc ca chuẩn của shipper chỉ là `/vt off` (loại bỏ hoàn toàn `/hetca`).
+    * Sửa câu 19: Đổi thành câu hỏi về cú pháp báo phí công nợ phát sinh (`/congno [số tiền]k [mô tả]`).
+    * Khắc phục triệt để lỗi treo nút nộp bài test: Chuyển tiến trình đồng bộ Supabase sang chế độ ngầm (non-blocking), gọi trực tiếp `renderExamResult()` tức thì, đảm bảo nộp bài test chuyển trang kết quả 0ms không bao giờ bị đơ.

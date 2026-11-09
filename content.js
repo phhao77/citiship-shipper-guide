@@ -1510,25 +1510,25 @@ const EXAM_QUESTIONS = [
     isRed: false,
     question: 'Khi hết giờ làm việc và đã hoàn tất hết mọi đơn hàng, lệnh shipper dùng để kết thúc ca là gì?',
     options: [
-      'A. /reset',
-      'B. /hetca (hoặc /vt off)',
+      'A. /vt off',
+      'B. /reset',
       'C. /thongke'
     ],
-    answer: 1,
-    explanation: 'Lệnh kết thúc ca là /hetca hoặc /vt off.'
+    answer: 0,
+    explanation: 'Khi hết giờ làm việc và đã hoàn tất hết đơn, shipper chỉ dùng lệnh /vt off để kết thúc ca.'
   },
   {
     id: 19,
     category: 'Mục 7: Bảng lệnh hệ thống',
     isRed: false,
-    question: 'Lệnh hệ thống nào dùng để tra cứu công nợ nộp tiền chiết khấu Thứ 2?',
+    question: 'Lệnh nào sau đây dùng để báo phí công nợ phát sinh lên hệ thống?',
     options: [
-      'A. /nocong',
-      'B. /phi',
-      'C. /di'
+      'A. /congno [số tiền]k [mô tả]',
+      'B. /nocong',
+      'C. /phi [số tiền]'
     ],
     answer: 0,
-    explanation: 'Lệnh /nocong dùng để tra cứu chi tiết công nợ chiết khấu nộp vào Thứ 2.'
+    explanation: 'Cú pháp chuẩn để báo phí công nợ phát sinh lên hệ thống là: /congno [số tiền]k [mô tả] (Ví dụ: /congno 30k gửi xe, /congno 50k phí bù...).'
   },
   {
     id: 20,
