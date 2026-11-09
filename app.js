@@ -320,7 +320,7 @@ async function confirmPage(pageId) {
   }
 
   if (user.role === 'shipper_moi' && count === 8) {
-    alert('🎉 Chúc mừng bạn đã hoàn thành training 8/8 mục nội quy!\nHệ thống sẽ mở khóa và chuyển bạn đến Làm bài test kiến thức (22 câu).');
+    alert('🎉 Chúc mừng bạn đã hoàn thành training 8/8 mục nội quy!\nHệ thống sẽ mở khóa và chuyển bạn đến Làm bài test kiến thức (${EXAM_QUESTIONS.length} câu).');
     location.hash = '#/exam';
   } else {
     alert('Đã ghi nhận bạn hiểu rõ quy định này! Cảm ơn bạn.');
@@ -778,7 +778,7 @@ function renderHome() {
             <div class="nsc-content">
               <h4>Đã hoàn thành training 8/8 mục!</h4>
               <p>Vui lòng hoàn thành <b>Bài test kiến thức (26 câu)</b> để kiểm tra mức độ hiểu quy trình.</p>
-              ${hasTaken ? `<p class="exam-prev-score">Điểm lần trước: <span class="score-fail">${user.exam_score} / 22 câu (Chưa đạt)</span>. Yêu cầu: Đúng ≥ 85% & 100% Quy Tắc Đỏ.</p>` : ''}
+              ${hasTaken ? `<p class="exam-prev-score">Điểm lần trước: <span class="score-fail">${user.exam_score} /  câu (Chưa đạt)</span>. Yêu cầu: Đúng ≥ 85% & 100% Quy Tắc Đỏ.</p>` : ''}
               <a href="#/exam" class="btn-start-exam">✍️ BẮT ĐẦU LÀM BÀI TEST NGAY (26 CÂU) →</a>
             </div>
           </div>
@@ -1000,8 +1000,10 @@ function handleExamSelect(qId, oIdx) {
 async function handleExamSubmit(e) {
   e.preventDefault();
 
+  const questions = getExamSession();
+  const totalQuestions = questions.length;
   const missingQIds = [];
-  EXAM_QUESTIONS.forEach(q => {
+  questions.forEach(q => {
     if (currentExamAnswers[q.id] === undefined) {
       missingQIds.push(q.id);
     }
@@ -1018,11 +1020,11 @@ async function handleExamSubmit(e) {
       firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    alert(`Bạn còn ${missingQIds.length} câu chưa trả lời (đang được viền đỏ). Vui lòng trả lời hết 22 câu trước khi nộp bài!`);
+    alert(`Bạn còn ${missingQIds.length} câu chưa trả lời (đang được viền đỏ). Vui lòng trả lời hết tất cả ${totalQuestions} câu trước khi nộp bài!`);
     return;
   }
 
-  if (!confirm('Bạn đã trả lời đầy đủ 22 câu. Bạn có chắc chắn muốn nộp bài test ngay không?')) {
+  if (!confirm(`Bạn đã trả lời đầy đủ ${totalQuestions} câu. Bạn có chắc chắn muốn nộp bài test ngay không?`)) {
     return;
   }
 
@@ -1033,24 +1035,36 @@ async function handleExamSubmit(e) {
   }
 
   let correctCount = 0;
-  EXAM_QUESTIONS.forEach(q => {
-    if (currentExamAnswers[q.id] === q.answer) {
+  let failedRedCount = 0;
+  questions.forEach(q => {
+    const isCorrect = currentExamAnswers[q.id] === q.answer;
+    if (isCorrect) {
       correctCount++;
+    } else if (q.isRed) {
+      failedRedCount++;
     }
   });
 
-  const isPassed = correctCount >= 19;
+  // Tiêu chuẩn đậu: Đạt >= 85% tổng số câu VÀ không làm sai bất kỳ câu Quy Tắc Đỏ nào (100% câu Đỏ)
+  const passScoreRatio = correctCount / totalQuestions;
+  const isPassed = (passScoreRatio >= 0.85) && (failedRedCount === 0);
+
   const user = getUser();
   user.exam_score = correctCount;
+  user.exam_total = totalQuestions;
+  user.exam_failed_red = failedRedCount;
   user.exam_status = isPassed ? 'passed' : 'failed';
   user.exam_answers = { ...currentExamAnswers };
+  user.exam_session = JSON.parse(JSON.stringify(questions)); // Lưu lại phiên câu hỏi và vị trí đáp án của phiên này
   user.exam_completed_at = new Date().toISOString();
   setUser(user);
 
   // Đồng bộ kết quả lên Supabase
   if (supabaseClient && user.phone) {
     try {
-      const statusText = isPassed ? `ĐẬU TEST (${correctCount}/22)` : `RỚT TEST (${correctCount}/22)`;
+      const statusText = isPassed 
+        ? `ĐẬU TEST (${correctCount}/${totalQuestions})` 
+        : (failedRedCount > 0 ? `RỚT TEST (Sai ${failedRedCount} câu Đỏ)` : `RỚT TEST (${correctCount}/${totalQuestions})`);
       await supabaseClient.from('shipper_confirmations').upsert({
         phone: user.phone,
         name: user.name,
@@ -1080,14 +1094,39 @@ function renderExamResult() {
   document.body.classList.remove('in-exam-mode');
   document.title = 'Kết quả bài test - Citiship';
 
+  const questions = user.exam_session || getExamSession();
+  const totalQ = user.exam_total || questions.length;
   const score = user.exam_score || 0;
-  const isPassed = user.exam_status === 'passed' || score >= 19;
-  const percent = Math.round((score / 22) * 100);
+  const failedRed = user.exam_failed_red || 0;
+  const isPassed = user.exam_status === 'passed';
+  const percent = Math.round((score / totalQ) * 100);
   const answers = user.exam_answers || {};
 
-  const reviewListHtml = EXAM_QUESTIONS.map((q, idx) => {
+  const reviewListHtml = questions.map((q, idx) => {
     const userChoice = answers[q.id];
     const isCorrect = userChoice === q.answer;
+
+    // Nếu RỚT: Không hiện đáp án đúng để chống chép/học vẹt
+    if (!isPassed) {
+      return `
+        <div class="result-review-card ${isCorrect ? 'ans-correct' : 'ans-wrong'}">
+          <div class="rrc-top">
+            <span class="rrc-num">Câu ${idx + 1}: ${q.category}</span>
+            <span class="rrc-badge ${isCorrect ? 'badge-c' : (q.isRed ? 'badge-red-fail' : 'badge-w')}">
+              ${isCorrect ? '✓ Đúng (+1đ)' : (q.isRed ? '❌ Sai Quy Tắc Đỏ (Bắt buộc)' : '✗ Chưa đúng (0đ)')}
+            </span>
+          </div>
+          <div class="rrc-q">${q.question}</div>
+          <div class="rrc-hint-box ${isCorrect ? 'hint-c' : 'hint-w'}">
+            ${isCorrect 
+              ? '<p style="color: #16a34a; margin: 0; font-weight: 600;">✓ Bạn đã chọn đáp án chính xác.</p>' 
+              : `<p style="color: #dc2626; margin: 0;">⚠️ Bạn trả lời chưa đúng câu này. Vui lòng mở lại mục <b>${q.category}</b> để ôn tập kỹ trước khi làm lại bài test!</p>`}
+          </div>
+        </div>
+      `;
+    }
+
+    // Nếu ĐẬU: Hiện đầy đủ đáp án chuẩn và lời giải thích
     return `
       <div class="result-review-card ${isCorrect ? 'ans-correct' : 'ans-wrong'}">
         <div class="rrc-top">
@@ -1130,8 +1169,10 @@ function renderExamResult() {
         </div>
         <p class="result-desc">
           ${isPassed 
-            ? 'Chúc mừng bạn đã hoàn thành xuất sắc bài kiểm tra kiến thức Citiship. Kết quả đã được ghi nhận trên hệ thống Quản trị để cấp phép chính thức vào ca!' 
-            : 'Tiêu chuẩn đạt yêu cầu là đúng từ <b>19 / 22 câu</b> (≥ 85%). Vui lòng xem kỹ phần giải thích đáp án sai bên dưới và bấm nút <b>Làm lại bài test</b> để hoàn tất nhé!'}
+            ? 'Chúc mừng bạn đã hoàn thành xuất sắc bài kiểm tra kiến thức Citiship (Đúng 100% Quy Tắc Đỏ cốt lõi). Kết quả đã được lưu trên hệ thống để cấp phép vào ca!' 
+            : (failedRed > 0 
+                ? `⚠️ <b>BẠN CHƯA ĐẠT DO LÀM SAI ${failedRed} CÂU QUY TẮC ĐỎ CỐT LÕI!</b><br>Theo quy chế Citiship, 100% các câu Quy Tắc Đỏ (An toàn, Chống lừa đảo, Gian lận) bắt buộc phải đúng. Vui lòng xem các mục cần ôn lại bên dưới và bấm Làm lại test.`
+                : `Tiêu chuẩn đạt yêu cầu là đúng từ <b>85%</b> trở lên. Bạn đạt ${score}/${totalQ} câu (${percent}%). Vui lòng ôn lại các mục được nhắc bên dưới và bấm Làm lại test!`)}
         </p>
         <div class="result-actions">
           <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
@@ -1140,8 +1181,8 @@ function renderExamResult() {
       </div>
 
       <div class="result-review-section">
-        <h3>🔍 Bảng Chi Tiết Đáp Án & Lời Giải Thích (22 Câu)</h3>
-        <p class="review-sub">Đối chiếu câu trả lời của bạn với đáp án chuẩn của Citiship:</p>
+        <h3>🔍 Bảng Chi Tiết Kết Quả (${totalQ} Câu)</h3>
+        <p class="review-sub">${isPassed ? 'Đối chiếu câu trả lời của bạn với đáp án chuẩn của Citiship:' : 'Danh sách câu hỏi cần rà soát lại trước khi làm bài test mới:'}</p>
         <div class="review-cards-list">
           ${reviewListHtml}
         </div>
