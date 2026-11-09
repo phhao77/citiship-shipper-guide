@@ -1,3 +1,17 @@
+
+function retakeExam() {
+  currentExamSession = null;
+  currentExamAnswers = {};
+  const user = getUser();
+  if (user) {
+    delete user.exam_answers;
+    delete user.exam_session;
+    setUser(user);
+  }
+  location.hash = '#/exam';
+}
+window.retakeExam = retakeExam;
+
 // Supabase Configuration
 const SUPABASE_URL = 'https://xftqqtoooojvgudhvjgg.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_43ximDxkHgLWrlQFFprJuA_NL9XRa5E';
@@ -737,7 +751,7 @@ function renderHome() {
             <div class="nsc-icon">🔒</div>
             <div class="nsc-content">
               <h4>Lộ trình training shipper mới</h4>
-              <p>Bạn cần training <b>8/8 mục</b> để làm bài test 22 câu.</p>
+              <p>Bạn cần training <b>8/8 mục</b> để làm bài test kiến thức (26 câu).</p>
               <div class="nsc-badge">Đã hoàn thành: <b>${confirmedCount} / 8 mục</b></div>
             </div>
           </div>
@@ -748,10 +762,10 @@ function renderHome() {
             <div class="nsc-icon">🏆</div>
             <div class="nsc-content">
               <h4>Chúc mừng! Bạn đã ĐẠT bài test Citiship!</h4>
-              <p>Điểm số bài test: <b>${user.exam_score} / 22 câu (Đạt chuẩn ≥ 19/22)</b>. Dữ liệu đã được lưu trên hệ thống để cấp phép vào ca hoạt động.</p>
+              <p>Điểm số bài test: <b>${user.exam_score} / câu (Đạt chuẩn ≥ 85% & Đúng 100% câu Đỏ)</b>. Dữ liệu đã được lưu trên hệ thống để cấp phép vào ca hoạt động.</p>
               <div class="nsc-actions">
                 <a href="#/exam-result" class="btn-exam-outline">📄 Xem lại kết quả test</a>
-                <a href="#/exam" class="btn-exam-outline">🔄 Làm lại bài test</a>
+                <a href="javascript:void(0)" onclick="retakeExam()" class="btn-exam-outline">🔄 Làm lại bài test</a>
               </div>
             </div>
           </div>
@@ -763,9 +777,9 @@ function renderHome() {
             <div class="nsc-icon">🎉</div>
             <div class="nsc-content">
               <h4>Đã hoàn thành training 8/8 mục!</h4>
-              <p>Vui lòng hoàn thành <b>Bài test kiến thức (22 câu)</b> để kiểm tra mức độ hiểu quy trình.</p>
-              ${hasTaken ? `<p class="exam-prev-score">Điểm lần trước: <span class="score-fail">${user.exam_score} / 22 câu (Chưa đạt)</span>. Yêu cầu: Đúng ≥ 19/22 câu.</p>` : ''}
-              <a href="#/exam" class="btn-start-exam">✍️ BẮT ĐẦU LÀM BÀI TEST NGAY (22 CÂU) →</a>
+              <p>Vui lòng hoàn thành <b>Bài test kiến thức (26 câu)</b> để kiểm tra mức độ hiểu quy trình.</p>
+              ${hasTaken ? `<p class="exam-prev-score">Điểm lần trước: <span class="score-fail">${user.exam_score} / 22 câu (Chưa đạt)</span>. Yêu cầu: Đúng ≥ 85% & 100% Quy Tắc Đỏ.</p>` : ''}
+              <a href="#/exam" class="btn-start-exam">✍️ BẮT ĐẦU LÀM BÀI TEST NGAY (26 CÂU) →</a>
             </div>
           </div>
         `;
@@ -874,7 +888,7 @@ function renderExam() {
       <div class="exam-blocked-box">
         <div class="eb-icon">⛔</div>
         <h2>Chưa thể vào làm bài test</h2>
-        <p>Bạn cần hoàn thành training và bấm xác nhận đủ <b>8/8 mục nội quy</b> trước khi làm bài test 22 câu.</p>
+        <p>Bạn cần hoàn thành training và bấm xác nhận đủ <b>8/8 mục nội quy</b> trước khi làm bài test ${EXAM_QUESTIONS.length} câu.</p>
         <div class="eb-progress">
           <span>Tiến độ training hiện tại:</span>
           <b>${confirmedCount} / 8 mục đã hoàn thành</b>
@@ -890,19 +904,18 @@ function renderExam() {
   // Khóa giao diện làm bài test: ẩn topbar navigation
   document.body.classList.add('in-exam-mode');
 
-  // Khôi phục câu trả lời cũ nếu có
-  if (user.exam_answers && Object.keys(currentExamAnswers).length === 0) {
-    currentExamAnswers = { ...user.exam_answers };
-  }
+  const sessionQuestions = getExamSession();
+  const totalCount = sessionQuestions.length;
 
   const answeredCount = Object.keys(currentExamAnswers).length;
 
-  const questionsHtml = EXAM_QUESTIONS.map((q, idx) => {
+  const questionsHtml = sessionQuestions.map((q, idx) => {
     const selected = currentExamAnswers[q.id];
     return `
-      <div class="exam-qcard" id="qcard-${q.id}">
+      <div class="exam-qcard ${q.isRed ? 'qcard-red-rule' : ''}" id="qcard-${q.id}">
         <div class="qcard-header">
-          <span class="qcard-num">Câu ${idx + 1} / 22</span>
+          <span class="qcard-num">Câu ${idx + 1} / ${totalCount}</span>
+          ${q.isRed ? '<span class="qcard-red-tag">🔴 QUY TẮC ĐỎ (BẮT BUỘC ĐÚNG)</span>' : ''}
           <span class="qcard-cat">${q.category}</span>
         </div>
         <div class="qcard-title">${q.question}</div>
@@ -931,13 +944,13 @@ function renderExam() {
         </div>
         <div class="exam-counter-pill">
           <span>Tiến độ làm bài:</span>
-          <b id="exam-counter-txt">${answeredCount} / ${sessionQuestions.length} câu</b>
+          <b id="exam-counter-txt">${answeredCount} / ${totalCount} câu</b>
         </div>
       </div>
 
       <div class="exam-intro-card">
-        <h2>📝 BÀI TEST KIẾN THỨC SHIPPER MỚI (${sessionQuestions.length} CÂU)</h2>
-        <p>Đề gồm <b>${sessionQuestions.length} câu hỏi tình huống thực tế</b> bám sát 8 mục quy trình hoạt động của Citiship.</p>
+        <h2>📝 BÀI TEST KIẾN THỨC SHIPPER MỚI (${totalCount} CÂU)</h2>
+        <p>Đề gồm <b>${totalCount} câu hỏi tình huống thực tế</b> bám sát 8 mục quy trình hoạt động của Citiship.</p>
         <div class="exam-rules-note">
           <div class="ern-item">🚫 <b>Chế độ làm bài:</b> Không rời khỏi trang này trong lúc làm bài.</div>
           <div class="ern-item">🎯 <b>Tiêu chuẩn ĐẠT:</b> Đạt từ <b>85%</b> trở lên VÀ <b>ĐÚNG 100% các câu Quy Tắc Đỏ cốt lõi 🔴</b>.</div>
@@ -1122,7 +1135,7 @@ function renderExamResult() {
         </p>
         <div class="result-actions">
           <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
-          <a href="#/exam" class="btn-result-retake" onclick="currentExamSession = null; currentExamAnswers = {};">${isPassed ? '🔄 Làm lại bài test' : '⚡ Làm lại test'}</a>
+          <a href="javascript:void(0)" onclick="retakeExam()" class="btn-result-retake">${isPassed ? '🔄 Làm lại bài test' : '⚡ Làm lại test'}</a>
         </div>
       </div>
 
@@ -1134,7 +1147,7 @@ function renderExamResult() {
         </div>
         <div class="review-bottom-nav">
           <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
-          <a href="#/exam" class="btn-result-retake">⚡ Làm lại bài test</a>
+          <a href="javascript:void(0)" onclick="retakeExam()" class="btn-result-retake">⚡ Làm lại bài test</a>
         </div>
       </div>
     </div>
