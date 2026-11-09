@@ -830,6 +830,30 @@ function renderHome() {
 
 // State lưu câu trả lời bài test tạm thời
 let currentExamAnswers = {};
+// Khởi tạo phiên thi xáo trộn ngẫu nhiên câu hỏi và vị trí A, B, C
+let currentExamSession = null;
+
+function getExamSession() {
+  if (!currentExamSession) {
+    currentExamSession = EXAM_QUESTIONS.map(q => {
+      const correctText = q.options[q.answer];
+      const cleanOpts = q.options.map(o => o.replace(/^[A-C]\.\s*/, ''));
+      const correctClean = correctText.replace(/^[A-C]\.\s*/, '');
+      
+      const shuffledClean = [...cleanOpts].sort(() => Math.random() - 0.5);
+      const newAnswerIdx = shuffledClean.indexOf(correctClean);
+      const finalOptions = shuffledClean.map((opt, i) => String.fromCharCode(65 + i) + '. ' + opt);
+      
+      return {
+        ...q,
+        options: finalOptions,
+        answer: newAnswerIdx
+      };
+    }).sort(() => Math.random() - 0.5);
+  }
+  return currentExamSession;
+}
+
 
 // Giao diện Làm bài test (#/exam)
 function renderExam() {
@@ -907,16 +931,16 @@ function renderExam() {
         </div>
         <div class="exam-counter-pill">
           <span>Tiến độ làm bài:</span>
-          <b id="exam-counter-txt">${answeredCount} / 22 câu</b>
+          <b id="exam-counter-txt">${answeredCount} / ${sessionQuestions.length} câu</b>
         </div>
       </div>
 
       <div class="exam-intro-card">
-        <h2>📝 BÀI TEST KIẾN THỨC SHIPPER MỚI (22 CÂU)</h2>
-        <p>Đề gồm <b>22 câu hỏi tình huống thực tế</b> bám sát 8 mục quy trình hoạt động của Citiship.</p>
+        <h2>📝 BÀI TEST KIẾN THỨC SHIPPER MỚI (${sessionQuestions.length} CÂU)</h2>
+        <p>Đề gồm <b>${sessionQuestions.length} câu hỏi tình huống thực tế</b> bám sát 8 mục quy trình hoạt động của Citiship.</p>
         <div class="exam-rules-note">
           <div class="ern-item">🚫 <b>Chế độ làm bài:</b> Không rời khỏi trang này trong lúc làm bài.</div>
-          <div class="ern-item">🎯 <b>Tiêu chuẩn ĐẠT:</b> Đúng từ <b>19 / 22 câu</b> trở lên (≥ 85%).</div>
+          <div class="ern-item">🎯 <b>Tiêu chuẩn ĐẠT:</b> Đạt từ <b>85%</b> trở lên VÀ <b>ĐÚNG 100% các câu Quy Tắc Đỏ cốt lõi 🔴</b>.</div>
         </div>
       </div>
 
@@ -946,7 +970,8 @@ function handleExamSelect(qId, oIdx) {
   const answeredCount = Object.keys(currentExamAnswers).length;
   const counterEl = document.getElementById('exam-counter-txt');
   if (counterEl) {
-    counterEl.innerText = `${answeredCount} / 22 câu`;
+    const totalQ = currentExamSession ? currentExamSession.length : 26;
+    counterEl.innerText = `${answeredCount} / ${totalQ} câu`;
   }
 
   const qcard = document.getElementById(`qcard-${qId}`);
@@ -1087,7 +1112,7 @@ function renderExamResult() {
         <div class="result-hero-icon">${isPassed ? '🏆' : '⚠️'}</div>
         <h1>${isPassed ? 'XUẤT SẮC! BẠN ĐÃ ĐẠT BÀI TEST' : 'BẠN CHƯA ĐẠT TIÊU CHUẨN BÀI TEST'}</h1>
         <div class="result-score-circle">
-          <div class="score-big">${score}<span>/22</span></div>
+          <div class="score-big">${score}<span>/${totalQ}</span></div>
           <div class="score-sub">Tỷ lệ chính xác: ${percent}%</div>
         </div>
         <p class="result-desc">
@@ -1097,7 +1122,7 @@ function renderExamResult() {
         </p>
         <div class="result-actions">
           <a href="#/" class="btn-result-home">🏠 Quay về Trang chủ</a>
-          <a href="#/exam" class="btn-result-retake">${isPassed ? '🔄 Làm lại bài test' : '⚡ Làm lại test'}</a>
+          <a href="#/exam" class="btn-result-retake" onclick="currentExamSession = null; currentExamAnswers = {};">${isPassed ? '🔄 Làm lại bài test' : '⚡ Làm lại test'}</a>
         </div>
       </div>
 
@@ -1287,3 +1312,23 @@ function initImageLightbox() {
 
 // Khởi tạo tính năng phóng to ảnh
 initImageLightbox();
+
+// Hàm Quản trị viên duyệt Shipper Mới thành Shipper Đang Chạy (Miễn test)
+window.approveShipper = async function(phone) {
+  if (!confirm(`Bạn có chắc chắn muốn duyệt tài xế có SĐT ${phone} thành "Shipper Đang chạy" (Miễn test) không?`)) {
+    return;
+  }
+  if (!supabaseClient) return;
+  try {
+    const { error } = await supabaseClient.from('shipper_confirmations').update({
+      role: 'shipper_cu',
+      status: 'Đã duyệt (Đang chạy)',
+      updated_at: new Date().toISOString()
+    }).eq('phone', phone);
+    if (error) throw error;
+    alert(`Đã duyệt tài xế ${phone} thành công!`);
+    loadAdminData();
+  } catch (err) {
+    alert(`Lỗi khi duyệt: ${err.message}`);
+  }
+};
