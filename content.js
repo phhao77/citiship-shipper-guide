@@ -10,11 +10,11 @@ const DRAFT = '<p class="draft">(Nội dung mẫu - chưa cập nhật)</p>';
 const PAGES = [
   { id: 'chinh-sach', icon: '💰', tone: 'o', title: 'Chính sách, chiết khấu', summary: 'Mức chiết khấu và quyền lợi',
     steps: [
-      { title: 'Ký quỹ 500k & Quy trình nghỉ việc', html: `
-        <div class="quick-summary">💵 Ký quỹ 500.000đ khi vào làm (1 lần duy nhất) — Hoàn lại 100% khi nghỉ đúng quy trình.</div>
+      { title: 'Ký quỹ 500k & Quy trình chấm dứt hợp tác', html: `
+        <div class="quick-summary">💵 Ký quỹ 500.000đ khi vào làm (1 lần duy nhất) — Hoàn lại 100% khi chấm dứt hợp tác đúng quy trình.</div>
         <div class="rule-grid">
           <div class="rule-card do">
-            <h4>✔️ Quy trình nghỉ việc chuẩn để nhận lại 500k</h4>
+            <h4>✔️ Quy trình chấm dứt hợp tác chuẩn để nhận lại 500k</h4>
             <ol>
               <li><b>Báo trước 1 tuần</b> cho Quản lý / Công ty.</li>
               <li><b>Chạy tiếp trọn vẹn tuần kế tiếp</b> theo đúng bảng ca đã đăng ký.</li>
@@ -23,7 +23,7 @@ const PAGES = [
             <p>👉 Hoàn tất đủ 3 bước trên: <b>Nhận lại 100% (500.000đ)</b> tiền ký quỹ.</p>
           </div>
           <div class="rule-card dont">
-            <h4>❌ Nghỉ ngang / Bỏ ca không báo trước</h4>
+            <h4>❌ Tự ý dừng chạy ngang / Bỏ ca không báo trước</h4>
             <ul>
               <li>Hệ thống <b>đóng box vĩnh viễn</b>.</li>
               <li><span class="rule-tag red">Không hoàn trả tiền ký quỹ</span> dưới bất kỳ lý do gì.</li>
@@ -50,7 +50,7 @@ const PAGES = [
 
       { title: 'Bảng % chiết khấu theo giờ chạy', html: `
         <div class="quick-summary">📈 Chạy càng nhiều giờ — % nộp về công ty càng thấp (thu nhập càng cao).</div>
-        <p>Áp dụng từ 04/01/2021. Chạy đủ mốc giờ nào thì áp dụng thang % nộp tương ứng cho tuần đó:</p>
+        <p>Áp dụng bảng quy chuẩn hiện hành (cập nhật mới nhất). Chạy đủ mốc giờ nào thì áp dụng thang % nộp tương ứng cho tuần đó:</p>
         <div class="note">
           ⚠️ <b>ĐỊNH NGHĨA GIỜ CHẠY THỰC TẾ ĐỂ TÍNH % CHIẾT KHẤU:</b><br>
           <b>Giờ chạy thực tế = Tổng giờ chạy trong tuần TRỪ ĐI các ca đã bị xóa do vi phạm quy định</b> (như: vào trễ quá 5p, ra khỏi nội ô quá 15p, không bật/thả định vị, ca không hoàn thành đơn nào...).<br>
@@ -72,6 +72,10 @@ const PAGES = [
           <tr class="row-green"><td><b>100 giờ (Mốc xuất sắc)</b></td><td><b>13%</b></td><td><b>87%</b></td></tr>
           <tr><td>105 giờ trở lên</td><td><b>12%</b></td><td><b>88%</b></td></tr>
         </table>
+        <div class="note" style="margin-top: 10px;">
+          📌 <b>QUY TẮC MỐC GIỜ TRUNG GIAN:</b> Nếu số giờ chạy thực tế nằm giữa 2 mốc (chưa đạt tới mốc kế tiếp), hệ thống sẽ tính theo <b>mốc thấp hơn liền kề</b>.<br>
+          <i>Ví dụ:</i> Chạy 45h (chưa đạt 50h) tính theo mốc 40h = 22%; Chạy 65h (chưa đạt 70h) tính theo mốc 60h = 20%.
+        </div>
 
         <h3>💵 Ví dụ minh họa thực tế tính tiền nộp Thứ 2:</h3>
         <p>Giả sử trong tuần tổng tiền ship bạn kiếm được là <b>1.000.000đ</b>:</p>
@@ -91,7 +95,7 @@ const PAGES = [
           <div class="rule-card do">
             <h4>🌅 Cao điểm sáng (7h - 9h)</h4>
             <ul>
-              <li>Điều kiện: Chạy tối thiểu <b>10 giờ</b> trong ít nhất <b>5 ngày</b>.</li>
+              <li>Điều kiện: Chạy tối thiểu <b>10 giờ</b> trong ít nhất <b>5 ngày</b> (khung sáng chỉ có 2 tiếng/ngày nên thực tế phải chạy đủ cả 5 ngày trong tuần).</li>
               <li>Mức thưởng: <span class="rule-tag green">Giảm 1% chiết khấu</span>.</li>
             </ul>
           </div>
@@ -105,7 +109,7 @@ const PAGES = [
         </div>
         <div class="note"><b>Lưu ý bắt buộc:</b> Phải đăng ký đủ tối thiểu <b>30 giờ / tuần</b> mới được xét thưởng cao điểm. Đạt cả 2 khung sẽ được <span class="rule-tag green">cộng gộp thưởng 2%</span>!</div>` },
 
-      { title: 'Thưởng dựt đơn box chung', html: `
+      { title: 'Thưởng giật đơn box chung', html: `
         <div class="quick-summary">📦 Box chung là kênh nhận thêm đơn ngoài ca giúp tăng thu nhập và nhận thưởng.</div>
         <div class="rule-grid">
           <div class="rule-card do">
@@ -121,7 +125,7 @@ const PAGES = [
             <small>Chỉ tính đơn đã hoàn thành có bấm "Đã lấy/Đã mua" và tải ảnh bằng chứng.</small>
           </div>
         </div>
-        <div class="note"><b>Lưu ý:</b> Shipper thử việc tuần đầu không tham gia dựt đơn box chung.</div>` },
+        <div class="note"><b>Lưu ý:</b> Shipper thử việc tuần đầu không tham gia giật đơn box chung.</div>` },
 
       { title: 'Phạt đăng ký ca và thiếu giờ', html: `
         <div class="quick-summary">⚠️ Chế tài xử phạt khi không đăng ký ca hoặc chạy thiếu giờ đăng ký.</div>
@@ -144,10 +148,10 @@ const PAGES = [
         </div>
         <div class="note"><b>Ví dụ:</b> Đăng ký 30h nhưng chỉ chạy 20h (bỏ 10h = thiếu 33%) → Bị phạt thêm <b>4%</b> vào bảng chiết khấu!</div>` },
 
-      { title: 'Phạt không dựt đơn box chung', html: `
+      { title: 'Phạt không giật đơn box chung', html: `
         <div class="quick-summary">⚡ Trách nhiệm hỗ trợ cướp đơn box chung khi rảnh rỗi.</div>
         <div class="rule-card dont">
-          <h4>❌ Chế tài khi lười dựt đơn</h4>
+          <h4>❌ Chế tài khi lười giật đơn</h4>
           <p>Tỷ lệ hoàn thành đơn từ box chung <b>dưới 10%</b> tổng đơn tuần:</p>
           <p><span class="rule-tag red">Phạt cộng thêm 2% chiết khấu</span></p>
         </div>
@@ -264,14 +268,14 @@ const PAGES = [
             <h4>❌ Quá 5 phút trễ</h4>
             <ul>
               <li>Hệ thống <b>tự động khóa ca</b>.</li>
-              <li>Phải đợi lúc kẹt đơn hoặc tổng đài mở pin tăng ca mới được vào.</li>
+              <li>Phải đợi lúc kẹt đơn hoặc tổng đài mở pin tăng ca mới được vào (nghĩa là khung giờ đó kẹt đơn và Tổng đài kích hoạt mở thêm suất chạy/tăng ca trên hệ thống).</li>
             </ul>
           </div>
         </div>
         <h3>Cách xin vào ca trễ (Phải báo TRƯỚC giờ ca bắt đầu):</h3>
         <div class="rule-card warn">
           <h4>⚠️ Cú pháp xin vào trễ:</h4>
-          <p>Chụp Timestamp ngay lúc đó + gửi lệnh: <code>/vaoca [vị_trí] [số_tiền]</code> và <b>tag Tổng đài</b> duyệt.</p>
+          <p>Nếu có việc đột xuất biết trước sẽ trễ, <b>phải nhắn báo trước giờ ca</b> cho Tổng đài. Khi đến nơi vào ca: Chụp ảnh Timestamp ngay lúc đó + gửi lệnh: <code>/vaoca [vị_trí] [số_tiền]</code> (ví dụ: <code>/vaoca 30/4 1tr</code>) và <b>tag Tổng đài</b> để được duyệt vào ca trễ.</p>
           <ul>
             <li>Ca đang <b>thiếu shipper</b>: Tổng đài có thể duyệt cho vào.</li>
             <li>Ca đang <b>đông shipper</b>: Phải đợi đến ca tăng ca tiếp theo.</li>
@@ -336,7 +340,7 @@ const PAGES = [
         <div class="quick-summary">⚖️ 100% đơn phải có ảnh Timestamp hiện rõ ngày giờ và vị trí định vị.</div>
         <div class="rule-grid">
           <div class="rule-card dont">
-            <h4>❌ Bậc thang xử lý vi phạm</h4>
+            <h4>❌ Bậc thang xử lý vi phạm (Cộng dồn trong tuần)</h4>
             <ol>
               <li><b>Lần 1:</b> Nhắc nhở.</li>
               <li><b>Lần 2:</b> Khóa nhận đơn box chung <span class="rule-tag red">1 ngày</span>.</li>
@@ -351,6 +355,7 @@ const PAGES = [
               <li>Thiếu từ 5% đến &lt; 10%: <span class="rule-tag orange">Phạt 1%</span></li>
               <li>Thiếu từ 10% đến &lt; 15%: <span class="rule-tag orange">Phạt 2%</span></li>
               <li>Thiếu từ 15% đến &lt; 20%: <span class="rule-tag orange">Phạt 3%</span></li>
+              <li>Thiếu từ 20% trở lên: <span class="rule-tag red">Phạt 4% và xem xét tạm khóa ca</span></li>
             </ul>
           </div>
         </div>` },
@@ -403,8 +408,8 @@ const PAGES = [
           <div class="rule-card do">
             <h4>✔️ Mua áo & Tiêu chuẩn</h4>
             <ul>
-              <li>Trong 7 - 10 ngày đầu: <span class="rule-tag green">200.000đ / áo</span>.</li>
-              <li>Từ ngày 11 trở đi: <span class="rule-tag orange">250.000đ / áo</span>.</li>
+              <li>Trong tuần đầu tiên (thử việc): <span class="rule-tag green">Giá ưu đãi 200.000đ / áo</span> (chưa bắt buộc có áo ngay trong những ngày đầu thử việc).</li>
+              <li>Từ tuần thứ 2 trở đi: <span class="rule-tag orange">250.000đ / áo</span>.</li>
               <li>Ảnh selfie vào ca mặc đồng phục thì <b>phải mặc suốt cả ca</b>.</li>
               <li>Ngày giặt áo: Không mặc đồng phục <span class="rule-tag orange">tối đa 30%</span> tổng giờ tuần.</li>
             </ul>
@@ -412,7 +417,7 @@ const PAGES = [
           <div class="rule-card dont">
             <h4>❌ Xử phạt vi phạm</h4>
             <ul>
-              <li>Giữa ca cởi áo hoặc mặc áo khác: <span class="rule-tag red">Xóa hết giờ tuần đó + Dừng hợp tác ngay</span>.</li>
+              <li>Giữa ca cởi áo hoặc mặc áo khác: <span class="rule-tag red">Xóa giờ ca làm việc đó</span> và cảnh cáo; tái phạm nhiều lần sẽ xem xét dừng hợp tác.</li>
               <li>Không đồng phục quá 30% số giờ: <span class="rule-tag red">Xóa giờ tất cả ca không đồng phục</span>.</li>
               <li>Lộn trái áo: Tính là không hợp lệ.</li>
             </ul>
@@ -424,8 +429,8 @@ const PAGES = [
         <div class="quick-summary">👖 Giữ hình ảnh chuyên nghiệp và an toàn tuyệt đối khi đi đơn.</div>
         <div class="rule-grid">
           <div class="rule-card dont">
-            <h4>🚫 CẤM CHỞ BẠN THEO CÙNG</h4>
-            <p>Phát hiện chở bạn bè, người thân đi làm cùng trong ca làm việc:</p>
+            <h4>🚫 CẤM CHỞ BẠN THEO CÙNG (Trừ khách đơn xe ôm)</h4>
+            <p>Phát hiện chở bạn bè, người thân đi làm cùng trong ca làm việc (trừ trường hợp đang chở khách của đơn xe ôm/chở người):</p>
             <p><span class="rule-tag red">Phạt 100.000đ / 1 lần vi phạm</span></p>
           </div>
           <div class="rule-card dont">
@@ -440,9 +445,9 @@ const PAGES = [
         <div class="rule-card dont" style="margin-bottom: 14px;">
           <h4>❌ Cho mượn tài khoản chạy chui:</h4>
           <ul>
-            <li><b>Cho thôi việc ngay lập tức.</b></li>
+            <li><b>Chấm dứt hợp tác ngay lập tức.</b></li>
             <li>Ghi nợ công bằng <b>toàn bộ phí ship của tuần</b>.</li>
-            <li>Báo về gia đình và chuyển cơ quan công an xử lý (lộ thông tin đơn hàng).</li>
+            <li>Chuyển cơ quan chức năng xử lý nếu có dấu hiệu vi phạm pháp luật (lộ dữ liệu đơn hàng, lạm dụng tín nhiệm).</li>
           </ul>
         </div>
         <h3>Kiểm tra ngẫu nhiên (Bot random 1 tiếng 20 bạn):</h3>
@@ -454,6 +459,10 @@ const PAGES = [
             <li>Thời hạn: Gửi trong vòng <span class="rule-tag orange">10 phút</span> (Quá 10 phút: <span class="rule-tag red">Xóa ca hiện tại</span>).</li>
           </ul>
         </div>
+        <div class="note">
+          ⚠️ <b>LƯU Ý AN TOÀN KHI RANDOM CHECK:</b><br>
+          Nếu đang điều khiển xe trên đường, tuyệt đối <b>KHÔNG vừa lái xe vừa chụp ảnh</b>. Shipper hãy chủ động tấp xe vào lề an toàn rồi mới chụp ảnh gửi hệ thống (thời hạn 10 phút hoàn toàn đủ để dừng xe an toàn).
+        </div>
         <figure>
           <img src="images/vi-du-random-check.png" alt="Ví dụ gửi hình khi bot random check">
           <figcaption>Ví dụ: shipper gửi selfie và ảnh xe có vị trí, giờ hợp lệ.</figcaption>
@@ -464,9 +473,9 @@ const PAGES = [
         <div class="rule-card dont">
           <h4>❌ 3 lý do bị xóa giờ ca làm ngay:</h4>
           <ol>
-            <li>Từ lúc vào ca đến hết ca <b>không hoàn thành được đơn nào</b> (ca phải có phát sinh phí ship).</li>
+            <li>Từ lúc vào ca đến hết ca <b>không hoàn thành được đơn nào</b> (ca phải có phát sinh phí ship).<br><i>* Miễn trừ: Nếu suốt ca shipper vẫn bật GPS liên tục, giữ đúng khu vực phân bổ nhưng do hệ thống ít đơn khách quan thì Tổng đài sẽ kiểm tra log định vị để không xóa giờ.</i></li>
             <li><b>Không bật/thả location vị trí</b> suốt ca.</li>
-            <li><b>Không thả vào trung tâm Quận Ninh Kiều</b> (trừ phường An Bình). Vào ca ngoài nội ô quá 15 phút không di chuyển vào nội ô sẽ bị Bot tự động kick khỏi ca.</li>
+            <li><b>Không thả vị trí vào khu vực trung tâm nội ô</b> (gồm các phường: Ninh Kiều, Cái Khế, Tân An, An Bình). Vào ca ngoài nội ô quá 15 phút không di chuyển vào nội ô sẽ bị Bot tự động kick khỏi ca.</li>
           </ol>
         </div>
         <div class="note">
@@ -492,11 +501,14 @@ const PAGES = [
             </ul>
           </div>
         </div>
-        <h3>Tham gia 2 nhóm Telegram chính thức:</h3>
+        <h3>2 nhóm Telegram chính thức:</h3>
         <ul>
-          <li>📢 <b>Kênh Thông Báo Tổng:</b> <a href="https://t.me/+VmUptoKMt5ljZjll" target="_blank" rel="noopener">t.me/+VmUptoKMt5ljZjll</a> (tin tức, ca trống, tăng ca).</li>
-          <li>👥 <b>Group Anh Em Shipper:</b> <a href="https://t.me/+QOds03wrq8MKFx0a" target="_blank" rel="noopener">t.me/+QOds03wrq8MKFx0a</a> (hỗ trợ nhau đi ca).</li>
-        </ul>` }
+          <li>📢 <b>Kênh Thông Báo Tổng:</b> Nhận tin tức, ca trống, thông báo thưởng và tăng ca.</li>
+          <li>👥 <b>Group Anh Em Shipper:</b> Trao đổi hỗ trợ nhau đi ca, hỏi đường, báo sự cố.</li>
+        </ul>
+        <div class="note">
+          🔒 <b>Cấp quyền vào nhóm:</b> Vì lý do bảo mật nội bộ và tránh người ngoài, link tham gia sẽ được Tổng đài gửi và duyệt trực tiếp sau khi bạn hoàn tất hồ sơ đăng ký (hoặc liên hệ qua mục Chat trên App để được cấp quyền vào nhóm).
+        </div>` }
     ] },
   { id: 'trung-thuc', icon: '🤝', tone: 'o', title: 'Trung thực & thái độ', summary: 'Tác phong với khách và cửa hàng',
     steps: [
@@ -602,14 +614,14 @@ const PAGES = [
             <h4>✔️ Thao tác chuẩn</h4>
             <ul>
               <li><b>Xong đơn:</b> Bấm báo xong và thả vị trí ngay (có thể di chuyển đến điểm đợi khác rồi thả lại location).</li>
-              <li><b>Đợi đơn quá 15 - 20 phút:</b> Nếu đợi 1 chỗ quá lâu không có đơn, phải <b>chủ động di chuyển vào trung tâm</b> để đón đơn hoặc mở box chung dựt đơn.</li>
+              <li><b>Đợi đơn quá 15 - 20 phút:</b> Nếu đợi 1 chỗ quá lâu không có đơn, phải <b>chủ động di chuyển vào trung tâm</b> để đón đơn hoặc mở box chung giật đơn.</li>
               <li><b>Có việc bận riêng:</b> Chủ động xin off để hết ca (<code>/vt off</code>), khi nào giải quyết xong việc thì xin vào ca lại, không treo máy.</li>
             </ul>
           </div>
           <div class="rule-card dont">
             <h4>❌ Chế tài nghiêm cấm</h4>
             <ul>
-              <li><b>Tuyệt đối không treo giờ:</b> Cấm hành vi đứng ở một vị trí xa không có đơn mà cũng không chịu dựt đơn để "treo giờ" ăn giờ chạy ca.</li>
+              <li><b>Tuyệt đối không treo giờ:</b> Cấm hành vi đứng ở một vị trí xa không có đơn mà cũng không chịu giật đơn để "treo giờ" ăn giờ chạy ca.</li>
               <li><b>Treo đơn (ngâm đơn):</b> Lần đầu <span class="rule-tag red">Xóa giờ toàn bộ ca làm</span>; Tái diễn <span class="rule-tag red">Ngừng hợp tác ngay</span>.</li>
             </ul>
           </div>
@@ -820,6 +832,18 @@ const PAGES = [
       { title: '1. Thao tác Vào ca', html: `
         <div class="quick-summary">⏰ Đến ca làm việc đã đăng ký, chuẩn bị đầy đủ thiết bị và bấm Bắt đầu ca trên tab Home.</div>
         
+        <h3>2 kênh vào ca của Citiship:</h3>
+        <div class="rule-grid" style="margin-bottom: 14px;">
+          <div class="rule-card do">
+            <h4>📱 Kênh chuẩn (Trên App)</h4>
+            <p>Đến giờ ca, mở app bấm nút <b>"Bắt đầu ca"</b> trên tab Home và hoàn tất 3 bước xác nhận bên dưới.</p>
+          </div>
+          <div class="rule-card warn">
+            <h4>💬 Kênh Telegram (Báo xin vào ca trễ)</h4>
+            <p>Trường hợp xin vào trễ có duyệt trước: Chụp ảnh Timestamp gửi kèm lệnh <code>/vaoca [vị_trí] [số_tiền]</code> và tag Tổng đài.</p>
+          </div>
+        </div>
+
         <h3>✅ Checklist kiểm tra trước khi bấm Vào ca:</h3>
         <div class="rule-card do" style="margin-bottom: 14px;">
           <ul>
@@ -842,7 +866,7 @@ const PAGES = [
         </figure>
         <ol>
           <li><b>Ảnh vào ca:</b> Dùng app Timestamp Camera chụp selfie rõ mặt, chọn ảnh vừa chụp tải lên hệ thống.</li>
-          <li><b>Tiền ứng hàng:</b> Nhập chính xác số tiền mặt hiện có vào ô <i>"Tiền ship hiện có"</i> để hệ thống định mức ứng tiền khi nhận đơn.</li>
+          <li><b>Tiền ứng hàng (trên app ghi là "Tiền ship hiện có"):</b> Nhập chính xác số tiền mặt thực tế bạn đang mang theo để hệ thống định mức ứng tiền khi nhận đơn.</li>
           <li><b>Xác nhận Vào ca:</b> Sau khi hoàn thành đủ 3 mục (Ảnh selfie, Tiền ship và Vị trí hiện tại), nút <b>Vào ca</b> ở cuối màn hình sẽ sáng lên để bấm xác nhận hoàn tất.</li>
         </ol>
         
@@ -872,25 +896,25 @@ const PAGES = [
           <li><b>Bấm Báo vị trí:</b> Nhấn nút xanh <b>Báo vị trí</b> ở góc dưới màn hình để cập nhật định vị thực tế về hệ thống cho Tổng đài.</li>
         </ol>` },
 
-      { title: '3. Box Chung (Dựt đơn)', html: `
+      { title: '3. Box Chung (Giật đơn)', html: `
         <p>Khi đơn hàng không có shipper nào đứng trong phạm vi 2km, hệ thống sẽ tự động bắn đơn lên <b>Box Chung</b> (hoặc thỉnh thoảng hệ thống tự random bắn đơn ngẫu nhiên).</p>
         <figure>
           <img src="images/app-box-chung-cho-20s.png" alt="Giao diện Box Chung đếm ngược 20s">
-          <figcaption>Box Chung: Chờ 20s xem thông tin trước khi dựt đơn.</figcaption>
+          <figcaption>Box Chung: Chờ 20s xem thông tin trước khi giật đơn.</figcaption>
         </figure>
         <h3>Quy trình lấy đơn Box Chung</h3>
         <ol>
           <li>Vào tab <b>Box Chung</b> ở thanh menu dưới cùng.</li>
-          <li><b>Chờ 20 giây:</b> Mỗi đơn mới lên sẽ hiển thị nút đếm ngược 20s để các bạn đọc kỹ thông tin đơn trước khi dựt.</li>
-          <li><b>Thao tác lấy đơn:</b> Sau khi hết 20s, <b>kéo thanh trượt sang phải</b> để nhận đơn.</li>
-          <li><b>Xin đơn sau 20s:</b> Nếu không dựt kịp, sau 20s trên box chung nếu vẫn còn đơn thì bạn có thể nhắn tin cho Tổng đài, Tổng đài sẽ hỗ trợ bắn đơn đó cho bạn.</li>
+          <li><b>Đếm ngược 20 giây:</b> Mỗi đơn mới lên hệ thống sẽ hiển thị đồng hồ đếm ngược 20 giây để tất cả shipper có thời gian đọc kỹ thông tin điểm lấy, điểm giao và cước phí trước khi nhận.</li>
+          <li><b>Kéo nhận đơn:</b> Ngay khi kết thúc 20 giây đếm ngược, nút nhận đơn sẽ mở ra để bạn <b>kéo thanh trượt sang phải</b> giật đơn.</li>
+          <li><b>Hỗ trợ xin đơn chưa có người nhận:</b> Nếu sau 20 giây mà đơn trên Box Chung vẫn chưa có tài xế nào nhận, bạn có thể nhắn tin vào mục Chat để nhờ Tổng đài điều phối trực tiếp đơn đó cho mình.</li>
         </ol>
-        <div class="note"><b>Lưu ý:</b> Shipper thử việc (tuần đầu tiên) không được dựt đơn box chung!</div>` },
+        <div class="note"><b>Lưu ý:</b> Shipper thử việc (tuần đầu tiên) không được giật đơn box chung!</div>` },
 
       { title: '4. Nhận đơn & Xử lý đơn phát sinh', html: `
         <div class="rule-card warn" style="margin-bottom: 14px;">
           <h4>⏱️ Bắt buộc bấm nhận đơn liền (trong 5 - 7 phút):</h4>
-          <p>Khi được hệ thống bắn đơn hoặc dựt đơn box chung thành công, shipper phải <b>bấm NHẬN ĐƠN liền</b>. Nếu quá <b>5 - 7 phút</b> không bấm nhận đơn, hệ thống sẽ tự động back đơn về và điều phối cho bạn khác (Tổng đài sẽ không giải quyết lại nếu đơn đã bắn cho người khác).</p>
+          <p>Khi được hệ thống bắn đơn hoặc giật đơn box chung thành công, shipper phải <b>bấm NHẬN ĐƠN liền</b>. Nếu quá <b>5 - 7 phút</b> không bấm nhận đơn, hệ thống sẽ tự động back đơn về và điều phối cho bạn khác (Tổng đài sẽ không giải quyết lại nếu đơn đã bắn cho người khác).</p>
         </div>
         <p>Khi hệ thống phân bổ đơn tới máy, kiểm tra nhanh thông tin đơn hàng và bấm nút xanh <b>NHẬN ĐƠN</b>.</p>
         <figure>
@@ -1208,37 +1232,46 @@ const PAGES = [
 
         <div class="rule-grid">
           <div class="rule-card do">
-            <h4>✔️ Chủ động trao đổi sớm</h4>
-            <p>Mọi thắc mắc về chính sách, chiết khấu, quy trình: Hãy hỏi ngay Quản lý / Điều hành lúc nhận việc để được giải đáp tận tình.</p>
+            <h4>✔️ Nắm rõ quy định & Trao đổi khi cần</h4>
+            <p>Nội quy, quy trình cốt lõi cần chủ động đọc kỹ khi nhận việc. Trong quá trình chạy đơn, nếu có bất kỳ thắc mắc phát sinh về bảng kê chiết khấu, đơn hàng hay chế tài: Hãy nhắn ngay cho Tổng đài qua <b>mục Chat trên App</b> để được giải đáp.</p>
           </div>
           <div class="rule-card dont">
             <h4>❌ Khi phát sinh vi phạm</h4>
-            <p>Trường hợp vi phạm quy định và giải thích do <i>"không nắm rõ"</i> hoặc <i>"chưa đọc kỹ"</i>:</p>
+            <p>Trường hợp vi phạm các Quy Tắc Đỏ và giải thích do <i>"không nắm rõ"</i> hoặc <i>"chưa đọc kỹ"</i>:</p>
             <ul>
-              <li>Shipper sẽ <b>hoàn toàn chịu trách nhiệm</b>.</li>
-              <li>Công ty không giải quyết với lý do <i>"không biết"</i> hay <i>"chưa được thông báo"</i>.</li>
+              <li>Shipper sẽ phải chịu trách nhiệm theo đúng quy định đã ban hành.</li>
+              <li>Không chấp nhận lý do <i>"không biết"</i> với các quy định đã được training đầy đủ.</li>
             </ul>
           </div>
+        </div>
+
+        <h3>⚖️ Quy trình khiếu nại minh bạch khi bị phạt sai:</h3>
+        <div class="rule-card do" style="margin-bottom: 16px;">
+          <ul>
+            <li><b>Kênh tiếp nhận khiếu nại:</b> Nhắn tin trực tiếp tại <b>mục Chat trên App Citiship</b> (khung giờ trực: <b>7h00 - 22h00</b> hàng ngày).</li>
+            <li><b>Thông tin cung cấp:</b> Mã đơn hàng, ngày/ca bị phạt, hình ảnh bằng chứng đối soát (ảnh Timestamp, log cuộc gọi, ảnh lỗi mạng/GPS) và lý do giải trình.</li>
+            <li><b>Thời hạn phản hồi:</b> Tổng đài sẽ kiểm tra dữ liệu hệ thống và phản hồi kết quả trong vòng <b>24h - 48h</b>. Nếu xác định lỗi do hệ thống hoặc nguyên nhân khách quan, công ty sẽ hủy phạt và hoàn trả 100% nợ công vào kỳ đối soát tiếp theo.</li>
+          </ul>
         </div>` },
 
       { title: 'Kênh liên hệ hỗ trợ chính thức', html: `
-        <div class="quick-summary">📞 4 Kênh hỗ trợ chính thức dành cho đối tác tài xế Citiship.</div>
+        <div class="quick-summary">📞 Các kênh hỗ trợ chính thức dành cho đối tác tài xế Citiship.</div>
         <div class="rule-grid">
           <div class="rule-card do">
-            <h4>💬 Tag Tổng đài sự cố</h4>
-            <p>Tag <code>@citiship_cantho</code> trên Telegram khi gặp boom hàng, đổi địa chỉ, sự cố khẩn cấp.</p>
+            <h4>📱 Mục Chat trên app (Kênh chính)</h4>
+            <p>Bấm vào tab <b>Chat</b> ở góc dưới màn hình app để trao đổi trực tiếp với Tổng đài viên (Hoạt động từ <b>7h00 - 22h00</b> hàng ngày) để giải quyết mọi sự cố, khiếu nại và cước phí.</p>
           </div>
           <div class="rule-card do">
-            <h4>📱 Mục Chat trên app</h4>
-            <p>Bấm vào tab <b>Chat</b> ở góc dưới màn hình app để trao đổi trực tiếp với điều phối viên trực ca.</p>
+            <h4>💬 Tag Tổng đài sự cố Telegram</h4>
+            <p>Tag <code>@citiship_cantho</code> trên Telegram khi gặp đơn boom hàng khẩn cấp hoặc cần duyệt lệnh ca.</p>
           </div>
           <div class="rule-card do">
             <h4>👥 Group Anh Em Shipper</h4>
-            <p><a href="https://t.me/+QOds03wrq8MKFx0a" target="_blank" rel="noopener">👉 Bấm vào đây để vào nhóm</a> (Hỏi đường, chia sẻ kinh nghiệm chạy xe).</p>
+            <p>Hỗ trợ giao lưu, hỏi đường, chia sẻ kinh nghiệm đi ca (Được duyệt thêm vào nhóm sau khi hoàn tất hồ sơ).</p>
           </div>
           <div class="rule-card do">
             <h4>📢 Kênh Thông Báo Tổng</h4>
-            <p><a href="https://t.me/+VmUptoKMt5ljZjll" target="_blank" rel="noopener">👉 Bấm vào đây để vào kênh</a> (Theo dõi thông báo ca trống, thưởng, tăng ca).</p>
+            <p>Kênh cập nhật thông báo nội bộ, ca trống, thưởng cao điểm và lịch tăng ca.</p>
           </div>
         </div>` }
     ] }
@@ -1249,7 +1282,7 @@ const EXAM_QUESTIONS = [
   {
     id: 1,
     category: 'Mục 1: Chính sách & Chiết khấu',
-    question: 'Quy trình chuẩn để nhận lại đủ 100% tiền ký quỹ (500.000đ) khi nghỉ việc là gì?',
+    question: 'Quy trình chuẩn để nhận lại đủ 100% tiền ký quỹ (500.000đ) khi chấm dứt hợp tác (nghỉ việc) là gì?',
     options: [
       'A. Báo trước 1 tuần cho Quản lý, chạy trọn vẹn tuần tiếp theo theo bảng ca đã đăng ký và nộp đủ chiết khấu tuần cuối.',
       'B. Nhắn tin xin nghỉ trước 1 ngày và nộp tiền chiết khấu.',
@@ -1349,10 +1382,10 @@ const EXAM_QUESTIONS = [
     options: [
       'A. Tiếp tục đứng yên đó bấm điện thoại đến hết ca để ăn trọn giờ.',
       'B. Tự ý tắt mạng đi uống cà phê.',
-      'C. Chủ động di chuyển vào khu vực trung tâm hoặc các điểm nóng để đón đơn, dựt box chung (nghiêm cấm đứng xa treo giờ).'
+      'C. Chủ động di chuyển vào khu vực trung tâm hoặc các điểm nóng để đón đơn, giật box chung (nghiêm cấm đứng xa treo giờ).'
     ],
     answer: 2,
-    explanation: 'Đợi quá 15-20p không có đơn phải chủ động di chuyển vào trung tâm đón đơn hoặc dựt box chung, nghiêm cấm đứng xa treo giờ.'
+    explanation: 'Đợi quá 15-20p không có đơn phải chủ động di chuyển vào trung tâm đón đơn hoặc giật box chung, nghiêm cấm đứng xa treo giờ.'
   },
   {
     id: 10,
@@ -1405,7 +1438,7 @@ const EXAM_QUESTIONS = [
   {
     id: 14,
     category: 'Mục 5: Hướng dẫn thao tác app',
-    question: 'Khi hệ thống phân bổ đơn tới máy hoặc vừa dựt đơn box chung, bạn phải bấm nút "NHẬN ĐƠN" trong bao lâu?',
+    question: 'Khi hệ thống phân bổ đơn tới máy hoặc vừa giật đơn box chung, bạn phải bấm nút "NHẬN ĐƠN" trong bao lâu?',
     options: [
       'A. Lúc nào bấm cũng được, miễn trong ca.',
       'B. Phải bấm trong vòng 5 - 7 phút; quá thời gian này hệ thống tự động back đơn điều phối người khác và không giải quyết lại.',
